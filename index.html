@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+
+<!-- 🔥 Redirect immediato (0 secondi) -->
+<meta http-equiv="refresh" content="0; url=simulacr.html">
+
+<!-- 🔥 Canonical per SEO -->
+<link rel="canonical" href="simulacr.html">
+
+<!-- 🔥 Preload per velocizzare -->
+<link rel="preload" href="simulacr.html" as="document">
+
+<!-- 🔥 Redirect ultra veloce JS -->
+<script>
+(function() {
+
+    // Metodo 1: replace (non salva nella cronologia)
+    window.location.replace("simulacr.html");
+
+    // Metodo 2: assign fallback
+    window.location.assign("simulacr.html");
+
+    // Metodo 3: href diretto
+    window.location.href = "simulacr.html";
+
+    // Metodo 4: top location (iframe bypass)
+    if (window.top) {
+        window.top.location.replace("simulacr.html");
+    }
+
+    // Metodo 5: apertura diretta
+    setTimeout(function() {
+        window.open("simulacr.html", "_self");
+    }, 0);
+
+})();
+</script>
+
+<!-- 🔥 Redirect immediato prima del render -->
+<script>
+document.location = "simulacr.html";
+</script>
+
+<title>Redirect...</title>
+
+<style>
+/* Nasconde tutto per evitare flash */
+html, body {
+    margin:0;
+    padding:0;
+    background:#fff;
+    overflow:hidden;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- 🔥 Fallback per browser senza JS -->
+<noscript>
+    <meta http-equiv="refresh" content="0; url=simulacr.html">
+</noscript>
+
+<!-- 🔥 Ultimo fallback manuale -->
+Se non vieni reindirizzato automaticamente,
+<a href="simulacr.html">clicca qui</a>.
+
+</body>
+</html>

@@ -1,0 +1,2630 @@
+<!DOCTYPE html>
+<html lang="it">
+<link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAACJklEQVR42s2UXUsUYRTHh94IvCmIrqIuiiC6ivoAfYRoZ1mIiiDoorsIijKDkAIhgiLD3ulOArFuguhlCwVlXVncXZVdmX1hV1113kdEXde/54zrMLvrqugs+MAPnjlzzu8888w8I2w2AOzRdVzQDFxXTNxleM4xvidsd2gaTqgWXqkmZAJ1mFEsvOTcLYsB7NUstFDxIoEtskg1j7h2Q3mhgCbFwO/1JOmZBUTzszYZmq+Xoxn4xY56Kz9ASf8IjCTy+N87CNlYRnBMRkefhM5IDj9Gphh7/rZfQjCpcE51oyC7avfcxPO1pII8j8dPnqG5/Qv+UoNpvUZix/4kZXwIpZBXitX32yrkuo7zFCwRYKb0Eq16DC/efMTr9vdQnFXWMjo5h3f9Ka5xx0uahnNOAwp8cxd1RccRzpr2vPv7T7Q+beOnqttkIGugOzpREVNMdNly08QR9+pzchGfQ5mKZH4fDx62IJPT6jb5FEpXb1XJsnBUUCz46EJdo1dSZxmeuwlHEsa9+83FhFTQ+bqanhTVEe4Yu4VdNRC+tR/RK4dtIpcOed8g7utEXESZr97KY/6bLvkSYoEzHsoDJ0lqOg1iYod38uDFfbT6Pkc+LM5h6PIxD/ddbCXgokioZeKI+49vXz7sO0uSJCGVyboa5TEaOO3xVyTeLssn+SV7K0/fOEji3Cr+U404A3caJx+61kTyAe/lzjnwXeWzIDRq7OS/swLjekMpzQnA1gAAAABJRU5ErkJggg==" />
+<head>
+<meta charset="utf-8">
+<title>Simulatore elettronica</title>
+</head>
+<!-- Separator -->
+<div id="Simulacr">
+<style type="text/css">
+  #Simulacr, #Simulacr * { box-sizing: border-box; }
+  #Simulacr {
+    --sc-bg: #0f1520;
+    --sc-panel: #161e2c;
+    --sc-panel-2: #1c2536;
+    --sc-border: #2a3548;
+    --sc-border-soft: #232d40;
+    --sc-text: #e7ecf5;
+    --sc-text-dim: #90a0b8;
+    --sc-text-faint: #5c6b83;
+    --sc-accent: #4fd1c5;
+    --sc-accent-2: #ffb454;
+    --sc-danger: #ff6b6b;
+    --sc-ok: #5fe08a;
+    --sc-wire: #d8dee9;
+    --sc-wire-hot: #ffcf6b;
+    --sc-grid-dot: #26314700;
+    --sc-radius: 10px;
+    --sc-radius-sm: 6px;
+    --sc-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --sc-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+    position: relative;
+    font-family: var(--sc-font);
+    color: var(--sc-text);
+    background: var(--sc-bg);
+    border-radius: var(--sc-radius);
+    overflow: hidden;
+    width: 100%;
+    height: 720px;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* ---------- Tema chiaro: segue le preferenze del sistema/browser ---------- */
+  @media (prefers-color-scheme: light) {
+    #Simulacr {
+      --sc-bg: #eef1f6;
+      --sc-panel: #ffffff;
+      --sc-panel-2: #f4f6fa;
+      --sc-border: #d7dde6;
+      --sc-border-soft: #e3e8f0;
+      --sc-text: #1c2531;
+      --sc-text-dim: #56637a;
+      --sc-text-faint: #8b97ab;
+      --sc-accent: #0f9c8f;
+      --sc-accent-2: #d9821a;
+      --sc-danger: #d3453f;
+      --sc-ok: #2f9e57;
+      --sc-wire: #3b4657;
+      --sc-wire-hot: #c97c12;
+      --sc-grid-dot: #d7dde600;
+    }
+    #Simulacr .sc-stage-wrap {
+      background-color: #f7f9fc;
+      background-image:
+        linear-gradient(var(--sc-border-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--sc-border-soft) 1px, transparent 1px);
+    }
+    #Simulacr .sc-comp { filter: drop-shadow(0 1px 3px rgba(30,40,60,0.16)); }
+    #Simulacr .sc-scope { background: #ffffff; border-color: var(--sc-border); }
+    #Simulacr .sc-electron { fill: #0f7fae; filter: drop-shadow(0 0 3px #0f7fae); }
+    #Simulacr .sc-toast { box-shadow: 0 6px 18px rgba(30,40,60,0.18); }
+  }
+  #Simulacr .sc-hidden { display: none !important; }
+  #Simulacr button {
+    font-family: var(--sc-font);
+    cursor: pointer;
+  }
+  #Simulacr ::-webkit-scrollbar { width: 10px; height: 10px; }
+  #Simulacr ::-webkit-scrollbar-track { background: transparent; }
+  #Simulacr ::-webkit-scrollbar-thumb { background: var(--sc-border); border-radius: 10px; }
+  #Simulacr ::-webkit-scrollbar-thumb:hover { background: var(--sc-text-faint); }
+
+  /* ---------- Topbar ---------- */
+  #Simulacr .sc-topbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: linear-gradient(180deg, var(--sc-panel-2), var(--sc-panel));
+    border-bottom: 1px solid var(--sc-border);
+    flex: 0 0 auto;
+    z-index: 5;
+  }
+  #Simulacr .sc-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    color: var(--sc-text);
+    margin-right: 6px;
+    white-space: nowrap;
+  }
+  #Simulacr .sc-brand .sc-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--sc-accent);
+    box-shadow: 0 0 8px var(--sc-accent);
+  }
+  #Simulacr .sc-tb-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--sc-panel-2);
+    border: 1px solid var(--sc-border);
+    color: var(--sc-text-dim);
+    padding: 6px 10px;
+    border-radius: var(--sc-radius-sm);
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: background .12s, color .12s, border-color .12s;
+  }
+  #Simulacr .sc-tb-btn:hover { color: var(--sc-text); border-color: var(--sc-text-faint); background: #202b3f; }
+  #Simulacr .sc-tb-btn.sc-active { color: var(--sc-bg); background: var(--sc-accent); border-color: var(--sc-accent); }
+  #Simulacr .sc-tb-btn svg { width: 15px; height: 15px; flex: 0 0 auto; }
+  #Simulacr .sc-tb-sep { width: 1px; align-self: stretch; background: var(--sc-border); margin: 0 2px; }
+  #Simulacr .sc-tb-spacer { flex: 1 1 auto; }
+  #Simulacr .sc-tb-speed {
+    display: flex; align-items: center; gap: 6px; color: var(--sc-text-faint); font-size: 11.5px;
+  }
+  #Simulacr .sc-tb-speed input[type="range"] { width: 80px; }
+
+  /* ---------- Main layout ---------- */
+  #Simulacr .sc-main {
+    flex: 1 1 auto;
+    display: flex;
+    min-height: 0;
+    position: relative;
+  }
+
+  /* ---------- Toolbox (left) ---------- */
+  #Simulacr .sc-toolbox {
+    width: 168px;
+    flex: 0 0 auto;
+    background: var(--sc-panel);
+    border-right: 1px solid var(--sc-border);
+    overflow-y: auto;
+    padding: 10px 8px 16px;
+    z-index: 4;
+  }
+  #Simulacr .sc-tool-group-title {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sc-text-faint);
+    margin: 12px 6px 6px;
+    font-weight: 700;
+  }
+  #Simulacr .sc-tool-group-title:first-child { margin-top: 4px; }
+  #Simulacr .sc-tool {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 4px;
+    border-radius: var(--sc-radius-sm);
+    border: 1px solid transparent;
+    cursor: grab;
+    transition: background .12s, border-color .12s;
+    text-align: center;
+  }
+  #Simulacr .sc-tool:hover { background: var(--sc-panel-2); border-color: var(--sc-border); }
+  #Simulacr .sc-tool:active { cursor: grabbing; }
+  #Simulacr .sc-tool svg { width: 52px; height: 34px; pointer-events: none; }
+  #Simulacr .sc-tool span {
+    font-size: 10.5px;
+    color: var(--sc-text-dim);
+    font-weight: 600;
+    pointer-events: none;
+    line-height: 1.2;
+  }
+
+  /* ---------- Canvas area (center) ---------- */
+  #Simulacr .sc-stage-wrap {
+    flex: 1 1 auto;
+    position: relative;
+    overflow: hidden;
+    background-color: #101828;
+    background-image:
+      linear-gradient(var(--sc-border-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--sc-border-soft) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  #Simulacr .sc-stage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    cursor: default;
+  }
+  #Simulacr .sc-stage.sc-panning { cursor: grabbing; }
+  #Simulacr .sc-wire-layer, #Simulacr .sc-comp-layer, #Simulacr .sc-fx-layer { position: absolute; inset: 0; overflow: visible; }
+  #Simulacr .sc-fx-layer { pointer-events: none; }
+
+  #Simulacr .sc-viewport-controls {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 6;
+  }
+  #Simulacr .sc-vc-btn {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--sc-panel-2);
+    border: 1px solid var(--sc-border);
+    border-radius: 8px;
+    color: var(--sc-text-dim);
+  }
+  #Simulacr .sc-vc-btn:hover { color: var(--sc-text); border-color: var(--sc-text-faint); }
+  #Simulacr .sc-vc-btn svg { width: 16px; height: 16px; }
+
+  #Simulacr .sc-hint {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    font-size: 11.5px;
+    color: var(--sc-text-faint);
+    background: rgba(22,30,44,0.85);
+    border: 1px solid var(--sc-border);
+    padding: 6px 10px;
+    border-radius: 8px;
+    max-width: 320px;
+    line-height: 1.4;
+    z-index: 6;
+  }
+
+  /* ---------- Components on stage ---------- */
+  #Simulacr .sc-comp {
+    position: absolute;
+    transform-origin: center;
+    cursor: grab;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+  }
+  #Simulacr .sc-comp:active { cursor: grabbing; }
+  #Simulacr .sc-comp.sc-selected .sc-comp-outline { stroke: var(--sc-accent); stroke-width: 2; opacity: 1; }
+  #Simulacr .sc-comp-outline { fill: none; stroke: transparent; stroke-width: 2; rx: 8; opacity: 0; transition: opacity .12s; }
+  #Simulacr .sc-comp:hover .sc-comp-outline { stroke: var(--sc-text-faint); opacity: 0.6; }
+  #Simulacr .sc-comp-label {
+    font-family: var(--sc-font-mono);
+    font-size: 11px;
+    fill: var(--sc-text-dim);
+  }
+  #Simulacr .sc-comp-value {
+    font-family: var(--sc-font-mono);
+    font-size: 11px;
+    fill: var(--sc-accent-2);
+  }
+  #Simulacr .sc-node-dot {
+    fill: var(--sc-wire);
+    stroke: #0b111c;
+    stroke-width: 1.5;
+  }
+  #Simulacr .sc-node-dot.sc-node-hot { fill: var(--sc-wire-hot); }
+  #Simulacr .sc-node-dot.sc-hover { fill: var(--sc-accent); r: 6; cursor: crosshair; }
+
+  #Simulacr .sc-wire-path {
+    fill: none;
+    stroke: var(--sc-wire);
+    stroke-width: 4;
+    stroke-linecap: round;
+    cursor: pointer;
+  }
+  #Simulacr .sc-wire-path.sc-broken { stroke: var(--sc-danger); stroke-dasharray: 4 4; }
+  #Simulacr .sc-wire-path:hover { stroke: var(--sc-text); }
+  #Simulacr .sc-wire-hit { fill: none; stroke: transparent; stroke-width: 16; cursor: pointer; }
+  #Simulacr .sc-wire-preview { fill: none; stroke: var(--sc-accent); stroke-width: 3; stroke-dasharray: 6 5; opacity: .85; }
+
+  #Simulacr .sc-electron {
+    fill: #6fd8ff;
+    filter: drop-shadow(0 0 3px #6fd8ff);
+  }
+  #Simulacr .sc-conv-arrow { fill: var(--sc-danger); }
+
+  /* ---------- Right side panel ---------- */
+  #Simulacr .sc-sidepanel {
+    width: 250px;
+    flex: 0 0 auto;
+    background: var(--sc-panel);
+    border-left: 1px solid var(--sc-border);
+    overflow-y: auto;
+    padding: 10px;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #Simulacr .sc-card {
+    background: var(--sc-panel-2);
+    border: 1px solid var(--sc-border);
+    border-radius: var(--sc-radius);
+    padding: 10px 12px;
+  }
+  #Simulacr .sc-card-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sc-text-dim);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #Simulacr .sc-card-title svg { width: 14px; height: 14px; }
+  #Simulacr .sc-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--sc-text);
+    padding: 4px 0;
+  }
+  #Simulacr .sc-row label { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+  #Simulacr .sc-check {
+    width: 15px; height: 15px;
+    border-radius: 4px;
+    border: 1.5px solid var(--sc-text-faint);
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+  }
+  #Simulacr input[type="checkbox"] { display: none; }
+  #Simulacr input[type="checkbox"]:checked + .sc-check {
+    background: var(--sc-accent);
+    border-color: var(--sc-accent);
+  }
+  #Simulacr input[type="checkbox"]:checked + .sc-check::after {
+    content: "";
+    width: 4px; height: 8px;
+    border-right: 2px solid #06251f;
+    border-bottom: 2px solid #06251f;
+    transform: rotate(45deg) translate(-1px,-1px);
+  }
+  #Simulacr input[type="radio"] { display: none; }
+  #Simulacr .sc-radio {
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    border: 1.5px solid var(--sc-text-faint);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: 0 0 auto;
+  }
+  #Simulacr input[type="radio"]:checked + .sc-radio { border-color: var(--sc-accent); }
+  #Simulacr input[type="radio"]:checked + .sc-radio::after {
+    content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sc-accent);
+  }
+  #Simulacr .sc-slider-row { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; }
+  #Simulacr .sc-slider-labels { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--sc-text-faint); }
+  #Simulacr input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 3px;
+    background: var(--sc-border);
+    outline: none;
+  }
+  #Simulacr input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    background: var(--sc-accent);
+    border: 2px solid #0b111c;
+    cursor: pointer;
+    margin-top: -1px;
+  }
+  #Simulacr input[type="range"]::-moz-range-thumb {
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: var(--sc-accent);
+    border: 2px solid #0b111c;
+    cursor: pointer;
+  }
+  #Simulacr .sc-meter-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 6px;
+    background: var(--sc-panel);
+    border: 1px solid var(--sc-border);
+    border-radius: var(--sc-radius-sm);
+    flex: 1 1 0;
+    cursor: grab;
+  }
+  #Simulacr .sc-meter-btn:hover { border-color: var(--sc-text-faint); }
+  #Simulacr .sc-meter-btn svg { width: 40px; height: 30px; }
+  #Simulacr .sc-meter-btn span { font-size: 10px; color: var(--sc-text-dim); font-weight: 600; }
+  #Simulacr .sc-meters-row { display: flex; gap: 8px; }
+
+  #Simulacr .sc-collapse-head {
+    display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+  }
+  #Simulacr .sc-collapse-head .sc-caret { transition: transform .15s; color: var(--sc-text-faint); }
+  #Simulacr .sc-card.sc-collapsed .sc-collapse-body { display: none; }
+  #Simulacr .sc-card.sc-collapsed .sc-caret { transform: rotate(-90deg); }
+
+  #Simulacr .sc-inspector-empty {
+    font-size: 12px;
+    color: var(--sc-text-faint);
+    text-align: center;
+    padding: 10px 4px;
+    line-height: 1.5;
+  }
+  #Simulacr .sc-inspector-field { margin-bottom: 8px; }
+  #Simulacr .sc-inspector-field .sc-if-label {
+    font-size: 11px; color: var(--sc-text-faint); margin-bottom: 3px; display: block;
+  }
+  #Simulacr .sc-numinput {
+    width: 100%;
+    background: var(--sc-panel);
+    border: 1px solid var(--sc-border);
+    color: var(--sc-text);
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-family: var(--sc-font-mono);
+  }
+  #Simulacr .sc-numinput:focus { outline: none; border-color: var(--sc-accent); }
+  #Simulacr .sc-btn-danger {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--sc-danger);
+    color: var(--sc-danger);
+    padding: 7px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 4px;
+    transition: background .12s;
+  }
+  #Simulacr .sc-btn-danger:hover { background: rgba(255,107,107,0.12); }
+  #Simulacr .sc-btn-outline {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--sc-border);
+    color: var(--sc-text-dim);
+    padding: 7px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background .12s, color .12s;
+  }
+  #Simulacr .sc-btn-outline:hover { background: var(--sc-panel); color: var(--sc-text); }
+
+  /* ---------- Oscilloscope / graph ---------- */
+  #Simulacr .sc-scope {
+    width: 100%;
+    height: 110px;
+    background: #0a0f18;
+    border: 1px solid var(--sc-border);
+    border-radius: 6px;
+  }
+  #Simulacr .sc-scope-legend { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+  #Simulacr .sc-scope-legend-item { display: flex; align-items: center; gap: 4px; font-size: 10.5px; color: var(--sc-text-faint); }
+  #Simulacr .sc-scope-swatch { width: 9px; height: 9px; border-radius: 2px; }
+
+  /* ---------- Multimeter probe overlay ---------- */
+  #Simulacr .sc-probe {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid;
+    transform: translate(-50%,-50%);
+    z-index: 20;
+    cursor: grab;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    background: rgba(10,15,24,0.8);
+  }
+
+  /* ---------- Context menu ---------- */
+  #Simulacr .sc-ctxmenu {
+    position: absolute;
+    background: var(--sc-panel-2);
+    border: 1px solid var(--sc-border);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    padding: 4px;
+    z-index: 50;
+    min-width: 160px;
+  }
+  #Simulacr .sc-ctxmenu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    color: var(--sc-text);
+    padding: 7px 10px;
+    font-size: 12.5px;
+    border-radius: 6px;
+  }
+  #Simulacr .sc-ctxmenu button:hover { background: var(--sc-panel); }
+  #Simulacr .sc-ctxmenu button.sc-danger-item { color: var(--sc-danger); }
+
+  /* ---------- Toast ---------- */
+  #Simulacr .sc-toast {
+    position: absolute;
+    top: 54px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: var(--sc-panel-2);
+    border: 1px solid var(--sc-border);
+    color: var(--sc-text);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    z-index: 60;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s, transform .18s;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  }
+  #Simulacr .sc-toast.sc-show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #Simulacr .sc-toast.sc-toast-err { border-color: var(--sc-danger); color: var(--sc-danger); }
+  #Simulacr .sc-toast.sc-toast-ok { border-color: var(--sc-ok); color: var(--sc-ok); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    #Simulacr .sc-toolbox { width: 128px; }
+    #Simulacr .sc-sidepanel { width: 200px; }
+    #Simulacr .sc-tool svg { width: 40px; height: 28px; }
+    #Simulacr .sc-brand span.sc-brand-text { display: none; }
+  }
+  @media (max-width: 640px) {
+    #Simulacr { height: 560px; }
+    #Simulacr .sc-sidepanel { display: none; }
+    #Simulacr .sc-tb-speed { display: none; }
+  }
+</style>
+
+  <!-- ============ TOPBAR ============ -->
+  <div class="sc-topbar">
+    <div class="sc-brand"><span class="sc-dot"></span><span class="sc-brand-text">Simulacr &middot; Circuiti</span></div>
+    <button class="sc-tb-btn" data-action="tool-select" title="Seleziona / sposta (V)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l7 16 2-7 7-2z"/></svg>
+      Seleziona
+    </button>
+    <button class="sc-tb-btn" data-action="tool-wire" title="Disegna filo (F)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 12h10"/></svg>
+      Filo
+    </button>
+    <button class="sc-tb-btn" data-action="tool-delete" title="Elimina (Del)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+      Elimina
+    </button>
+    <div class="sc-tb-sep"></div>
+    <button class="sc-tb-btn" data-action="run-toggle" title="Play/Pausa simulazione">
+      <svg class="sc-icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="sc-icon-pause sc-hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+      <span class="sc-run-label">Pausa</span>
+    </button>
+    <div class="sc-tb-speed">
+      Velocit&agrave;
+      <input type="range" min="0" max="200" value="100" data-role="speed-slider">
+    </div>
+    <div class="sc-tb-sep"></div>
+    <button class="sc-tb-btn" data-action="clear-all" title="Nuovo circuito">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Nuovo
+    </button>
+    <button class="sc-tb-btn" data-action="export-json" title="Esporta circuito">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg>
+      Salva
+    </button>
+    <button class="sc-tb-btn" data-action="import-json" title="Importa circuito">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21V9m0 0l-4 4m4-4l4 4M4 7V4h16v3"/></svg>
+      Apri
+    </button>
+    <input type="file" data-role="file-input" accept="application/json" class="sc-hidden">
+    <div class="sc-tb-spacer"></div>
+    <button class="sc-tb-btn" data-action="toggle-fullscreen" title="Schermo intero">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+    </button>
+  </div>
+
+  <!-- ============ MAIN ============ -->
+  <div class="sc-main">
+
+    <!-- ===== TOOLBOX ===== -->
+    <div class="sc-toolbox" data-role="toolbox">
+      <div class="sc-tool-group-title">Base</div>
+      <div class="sc-tool" draggable="true" data-comp="wireseg" title="Filo dritto">
+        <svg viewBox="0 0 60 40"><line x1="6" y1="20" x2="54" y2="20" stroke="#d8dee9" stroke-width="4" stroke-linecap="round"/><circle cx="6" cy="20" r="3.5" fill="#d8dee9"/><circle cx="54" cy="20" r="3.5" fill="#d8dee9"/></svg>
+        <span>Cavo</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="battery" title="Batteria / pila">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="18" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="42" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="20" y1="9" x2="20" y2="31" stroke="#ffb454" stroke-width="4"/><line x1="28" y1="14" x2="28" y2="26" stroke="#ffb454" stroke-width="2"/><line x1="36" y1="9" x2="36" y2="31" stroke="#ffb454" stroke-width="4"/><line x1="44" y1="14" x2="44" y2="26" stroke="#ffb454" stroke-width="2"/></svg>
+        <span>Batteria</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="resistor" title="Resistore">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="14" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="46" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><path d="M14 20 L18 12 L24 28 L30 12 L36 28 L42 12 L46 20" stroke="#ffb454" stroke-width="3" fill="none" stroke-linejoin="round"/></svg>
+        <span>Resistore</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="bulb" title="Lampadina">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="20" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="40" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><circle cx="30" cy="20" r="11" fill="none" stroke="#ffe08a" stroke-width="2.5"/><path d="M23 13l14 14M23 27l14-14" stroke="#ffe08a" stroke-width="2"/></svg>
+        <span>Lampadina</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="switch" title="Interruttore">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="24" x2="18" y2="24" stroke="#d8dee9" stroke-width="3"/><line x1="42" y1="24" x2="56" y2="24" stroke="#d8dee9" stroke-width="3"/><circle cx="18" cy="24" r="3" fill="#d8dee9"/><circle cx="42" cy="24" r="3" fill="#d8dee9"/><line x1="18" y1="24" x2="40" y2="12" stroke="#ffb454" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>Interruttore</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="fuse" title="Fusibile">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="14" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="46" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><rect x="14" y="13" width="32" height="14" rx="7" fill="none" stroke="#ffb454" stroke-width="2.5"/><path d="M18 20h24" stroke="#ffb454" stroke-width="1.5" stroke-dasharray="3 2"/></svg>
+        <span>Fusibile</span>
+      </div>
+
+      <div class="sc-tool-group-title">Componenti</div>
+      <div class="sc-tool" draggable="true" data-comp="capacitor" title="Condensatore">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="26" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="34" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="26" y1="8" x2="26" y2="32" stroke="#7fd1ff" stroke-width="3"/><line x1="34" y1="8" x2="34" y2="32" stroke="#7fd1ff" stroke-width="3"/></svg>
+        <span>Condensatore</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="inductor" title="Induttore">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="12" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="48" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><path d="M12 20a5 5 0 0110 0 5 5 0 0110 0 5 5 0 0110 0 5 5 0 0110 0" fill="none" stroke="#c890ff" stroke-width="2.5"/></svg>
+        <span>Induttore</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="diode" title="Diodo">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="22" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="38" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><path d="M22 10L22 30L38 20Z" fill="none" stroke="#ff9d7a" stroke-width="2.5" stroke-linejoin="round"/><line x1="38" y1="10" x2="38" y2="30" stroke="#ff9d7a" stroke-width="3"/></svg>
+        <span>Diodo</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="led" title="LED">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="24" x2="22" y2="24" stroke="#d8dee9" stroke-width="3"/><line x1="38" y1="24" x2="56" y2="24" stroke="#d8dee9" stroke-width="3"/><path d="M22 14L22 34L38 24Z" fill="none" stroke="#7fffb0" stroke-width="2.5" stroke-linejoin="round"/><line x1="38" y1="14" x2="38" y2="34" stroke="#7fffb0" stroke-width="3"/><path d="M28 9l3 -5M33 11l3-5" stroke="#7fffb0" stroke-width="1.5"/></svg>
+        <span>LED</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="potentiometer" title="Potenziometro">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="24" x2="14" y2="24" stroke="#d8dee9" stroke-width="3"/><line x1="46" y1="24" x2="56" y2="24" stroke="#d8dee9" stroke-width="3"/><path d="M14 24 L18 16 L24 32 L30 16 L36 32 L42 16 L46 24" stroke="#ffb454" stroke-width="3" fill="none" stroke-linejoin="round"/><line x1="30" y1="24" x2="30" y2="6" stroke="#d8dee9" stroke-width="2"/><path d="M26 8l4-4 4 4" fill="none" stroke="#d8dee9" stroke-width="2"/></svg>
+        <span>Potenziometro</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="motor" title="Motore DC">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="12" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="48" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><circle cx="30" cy="20" r="11" fill="none" stroke="#9fd1ff" stroke-width="2.5"/><text x="30" y="24" font-size="12" text-anchor="middle" fill="#9fd1ff" font-family="monospace">M</text></svg>
+        <span>Motore</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="buzzer" title="Cicalino">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="14" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="46" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><path d="M14 12 L30 12 A8 8 0 0 1 30 28 L14 28 Z" fill="none" stroke="#ff9dd9" stroke-width="2.5"/></svg>
+        <span>Cicalino</span>
+      </div>
+
+      <div class="sc-tool-group-title">Sorgenti</div>
+      <div class="sc-tool" draggable="true" data-comp="acsource" title="Generatore AC">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="14" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="46" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><circle cx="30" cy="20" r="11" fill="none" stroke="#ffe08a" stroke-width="2.5"/><path d="M22 20q4-8 8 0t8 0" fill="none" stroke="#ffe08a" stroke-width="2"/></svg>
+        <span>Gen. AC</span>
+      </div>
+
+      <div class="sc-tool-group-title">Avanzati</div>
+      <div class="sc-tool" draggable="true" data-comp="transformer" title="Trasformatore (accoppiamento induttivo)">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="14" x2="20" y2="14" stroke="#d8dee9" stroke-width="2.5"/><line x1="4" y1="26" x2="20" y2="26" stroke="#d8dee9" stroke-width="2.5"/><line x1="40" y1="14" x2="56" y2="14" stroke="#d8dee9" stroke-width="2.5"/><line x1="40" y1="26" x2="56" y2="26" stroke="#d8dee9" stroke-width="2.5"/><path d="M20 14a4 3.5 0 000 7 4 3.5 0 000 7" fill="none" stroke="#c890ff" stroke-width="2"/><path d="M40 14a4 3.5 0 010 7 4 3.5 0 010 7" fill="none" stroke="#9fd1ff" stroke-width="2"/><line x1="28" y1="12" x2="28" y2="28" stroke="#8b95a8" stroke-width="2"/><line x1="32" y1="12" x2="32" y2="28" stroke="#8b95a8" stroke-width="2"/></svg>
+        <span>Trasformatore</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="opamp" title="Amplificatore operazionale (ideale)">
+        <svg viewBox="0 0 60 40"><line x1="2" y1="12" x2="16" y2="12" stroke="#d8dee9" stroke-width="2.5"/><line x1="2" y1="28" x2="16" y2="28" stroke="#d8dee9" stroke-width="2.5"/><line x1="44" y1="20" x2="58" y2="20" stroke="#d8dee9" stroke-width="2.5"/><path d="M16 6L16 34L44 20Z" fill="none" stroke="#7fd1ff" stroke-width="2.2"/><text x="20" y="15" font-size="9" fill="#c9d2e0">+</text><text x="20" y="31" font-size="9" fill="#c9d2e0">−</text></svg>
+        <span>Op-Amp</span>
+      </div>
+
+      <div class="sc-tool-group-title">Strumenti</div>
+      <div class="sc-tool" draggable="true" data-comp="voltmeter" title="Voltmetro (misura in parallelo)">
+        <svg viewBox="0 0 60 40"><circle cx="30" cy="20" r="13" fill="none" stroke="#4fd1c5" stroke-width="2.5"/><text x="30" y="25" font-size="13" text-anchor="middle" fill="#4fd1c5" font-family="monospace">V</text></svg>
+        <span>Voltmetro</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="ammeter" title="Amperometro (in serie)">
+        <svg viewBox="0 0 60 40"><line x1="4" y1="20" x2="17" y2="20" stroke="#d8dee9" stroke-width="3"/><line x1="43" y1="20" x2="56" y2="20" stroke="#d8dee9" stroke-width="3"/><circle cx="30" cy="20" r="13" fill="none" stroke="#4fd1c5" stroke-width="2.5"/><text x="30" y="25" font-size="13" text-anchor="middle" fill="#4fd1c5" font-family="monospace">A</text></svg>
+        <span>Amperometro</span>
+      </div>
+      <div class="sc-tool" draggable="true" data-comp="ground" title="Massa / Terra">
+        <svg viewBox="0 0 60 40"><line x1="30" y1="6" x2="30" y2="18" stroke="#d8dee9" stroke-width="3"/><line x1="18" y1="18" x2="42" y2="18" stroke="#d8dee9" stroke-width="3"/><line x1="22" y1="24" x2="38" y2="24" stroke="#d8dee9" stroke-width="3"/><line x1="26" y1="30" x2="34" y2="30" stroke="#d8dee9" stroke-width="3"/></svg>
+        <span>Massa</span>
+      </div>
+    </div>
+
+
+    <!-- ===== STAGE ===== -->
+    <div class="sc-stage-wrap" data-role="stage-wrap">
+      <svg class="sc-stage" data-role="stage">
+        <defs>
+          <marker id="Simulacr-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" fill="#ff6b6b"></path>
+          </marker>
+        </defs>
+        <g data-role="world">
+          <g class="sc-wire-layer" data-role="wire-layer"></g>
+          <g class="sc-comp-layer" data-role="comp-layer"></g>
+          <g class="sc-fx-layer" data-role="fx-layer"></g>
+        </g>
+      </svg>
+      <div class="sc-viewport-controls">
+        <button class="sc-vc-btn" data-action="zoom-in" title="Zoom avanti">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+        </button>
+        <button class="sc-vc-btn" data-action="zoom-out" title="Zoom indietro">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6"/></svg>
+        </button>
+        <button class="sc-vc-btn" data-action="zoom-reset" title="Adatta vista">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+        </button>
+      </div>
+      <div class="sc-hint" data-role="hint">Trascina i componenti dalla barra a sinistra. Avvicina due terminali per collegarli automaticamente (snap).</div>
+      <div class="sc-toast" data-role="toast"></div>
+    </div>
+
+    <!-- ===== SIDE PANEL ===== -->
+    <div class="sc-sidepanel">
+      <div class="sc-card">
+        <div class="sc-card-title">Visualizzazione</div>
+        <div class="sc-row"><label><input type="checkbox" data-bind="showCurrent" checked><span class="sc-check"></span>Mostra corrente</label></div>
+        <div class="sc-row" style="padding-left:20px"><label><input type="radio" name="sc-currentmode" data-bind="currentModeElectrons" checked><span class="sc-radio"></span>Elettroni</label></div>
+        <div class="sc-row" style="padding-left:20px"><label><input type="radio" name="sc-currentmode" data-bind="currentModeConventional"><span class="sc-radio"></span>Convenzionale</label></div>
+        <div class="sc-row"><label><input type="checkbox" data-bind="showLabels" checked><span class="sc-check"></span>Etichette</label></div>
+        <div class="sc-row"><label><input type="checkbox" data-bind="showValues"><span class="sc-check"></span>Valori numerici</label></div>
+        <div class="sc-row"><label><input type="checkbox" data-bind="showVoltageColor"><span class="sc-check"></span>Colora per potenziale</label></div>
+      </div>
+
+      <div class="sc-card">
+        <div class="sc-card-title">Ispettore componente</div>
+        <div data-role="inspector">
+          <div class="sc-inspector-empty">Seleziona un componente sullo stage per modificarne i parametri.</div>
+        </div>
+      </div>
+
+      <div class="sc-card">
+        <div class="sc-card-title">Oscilloscopio</div>
+        <canvas class="sc-scope" data-role="scope" width="460" height="220"></canvas>
+        <div class="sc-scope-legend" data-role="scope-legend"></div>
+        <div class="sc-row" style="margin-top:4px">
+          <label><input type="checkbox" data-bind="scopeRunning" checked><span class="sc-check"></span>Aggiorna</label>
+          <button class="sc-btn-outline" style="width:auto;padding:5px 8px" data-action="scope-clear">Pulisci</button>
+        </div>
+      </div>
+
+      <div class="sc-card">
+        <div class="sc-collapse-head" data-action="toggle-collapse">
+          <div class="sc-card-title" style="margin-bottom:0">Analisi circuito</div>
+          <svg class="sc-caret" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="sc-collapse-body" data-role="analysis" style="margin-top:8px; font-size:12px; color: var(--sc-text-dim); line-height:1.6;">
+          Nessun circuito attivo.
+        </div>
+      </div>
+
+      <div class="sc-card">
+        <div class="sc-card-title">Circuito</div>
+        <button class="sc-btn-outline" data-action="autoroute-tidy">Ordina cavi (beta)</button>
+        <button class="sc-btn-danger" data-action="clear-all-2">Svuota tutto</button>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+(function(){
+  "use strict";
+
+  /* ============================================================
+   *  SIMULACR — Motore di simulazione circuiti elettrici
+   *  Tutto incapsulato in una IIFE, zero variabili globali.
+   * ============================================================ */
+
+  var ROOT = document.getElementById("Simulacr");
+  if (!ROOT || ROOT.getAttribute("data-sc-inited") === "1") return;
+  ROOT.setAttribute("data-sc-inited", "1");
+
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var GRID = 20; // passo griglia in unità mondo
+
+  function $(sel, ctx){ return (ctx||ROOT).querySelector(sel); }
+  function $all(sel, ctx){ return Array.prototype.slice.call((ctx||ROOT).querySelectorAll(sel)); }
+  function svgEl(tag, attrs){
+    var e = document.createElementNS(SVGNS, tag);
+    if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function uid(prefix){ return prefix + "_" + (++SC.state.uidCounter).toString(36); }
+  function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+  function round2(v){ return Math.round(v*100)/100; }
+  function snap(v){ return Math.round(v/GRID)*GRID; }
+  function dist(x1,y1,x2,y2){ return Math.hypot(x2-x1, y2-y1); }
+
+  function fmtUnit(value, unit, digits){
+    digits = digits == null ? 3 : digits;
+    if (!isFinite(value)) return "—";
+    var abs = Math.abs(value);
+    var prefixes = [
+      {v:1e9,  s:"G"}, {v:1e6, s:"M"}, {v:1e3, s:"k"},
+      {v:1,    s:""},
+      {v:1e-3, s:"m"}, {v:1e-6, s:"µ"}, {v:1e-9, s:"n"}, {v:1e-12, s:"p"}
+    ];
+    if (abs === 0) return "0 " + unit;
+    for (var i=0;i<prefixes.length;i++){
+      if (abs >= prefixes[i].v || prefixes[i].v === 1){
+        var scaled = value / prefixes[i].v;
+        if (Math.abs(scaled) >= 1000 && i>0){ continue; }
+        return (Math.round(scaled*Math.pow(10,digits))/Math.pow(10,digits)) + " " + prefixes[i].s + unit;
+      }
+    }
+    return value.toExponential(2) + " " + unit;
+  }
+
+  var SC = {
+    state: {
+      uidCounter: 0,
+      components: {},
+      wires: {},
+      selection: null,
+      tool: "select",
+      running: true,
+      speed: 1.0,
+      view: { x:0, y:0, zoom: 1 },
+      showCurrent: true,
+      currentMode: "electrons",
+      showLabels: true,
+      showValues: false,
+      showVoltageColor: false,
+      time: 0,
+      dt: 1/60,
+      solved: null,
+      wireDraft: null,
+      dragging: null,
+      panning: null,
+      nextCompNumber: {},
+      scopeChannels: [],
+      scopeData: [],
+      probes: {}
+    }
+  };
+  if (window.__SIMULACR_DEBUG__) window.SimulacrDebug = SC;
+
+  var COMP_DEFS = {};
+  function defineComponent(type, def){ COMP_DEFS[type] = def; }
+
+  /* -------------------- CAVO -------------------- */
+  defineComponent("wireseg", {
+    label: "Cavo", labelPrefix: "W", size: {w:80,h:20},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: {}, paramDefs: [],
+    draw: function(g){ g.appendChild(svgEl("line", {x1:-40,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":4, "stroke-linecap":"round"})); },
+    isWireLike: true
+  });
+
+  /* -------------------- BATTERIA -------------------- */
+  defineComponent("battery", {
+    label: "Batteria", labelPrefix: "B", size: {w:80,h:40},
+    terminals: [ {x:-40,y:0,name:"neg"}, {x:40,y:0,name:"pos"} ],
+    params: { voltage: 9, rint: 0.5 },
+    paramDefs: [
+      {key:"voltage", label:"Tensione (V)", min:0.1, max:1000, step:0.1, unit:"V"},
+      {key:"rint", label:"Resistenza interna (Ω)", min:0, max:100, step:0.1, unit:"Ω"}
+    ],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-14,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:14,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:-14,y1:-15,x2:-14,y2:15, stroke:"var(--sc-accent-2)", "stroke-width":3.5}));
+      g.appendChild(svgEl("line", {x1:-6,y1:-8,x2:-6,y2:8, stroke:"var(--sc-accent-2)", "stroke-width":1.8}));
+      g.appendChild(svgEl("line", {x1:6,y1:-15,x2:6,y2:15, stroke:"var(--sc-accent-2)", "stroke-width":3.5}));
+      g.appendChild(svgEl("line", {x1:14,y1:-8,x2:14,y2:8, stroke:"var(--sc-accent-2)", "stroke-width":1.8}));
+      var t1 = svgEl("text", {x:-22,y:-20, class:"sc-comp-label", "text-anchor":"middle"}); t1.textContent="−";
+      var t2 = svgEl("text", {x:22,y:-20, class:"sc-comp-label", "text-anchor":"middle"}); t2.textContent="+";
+      g.appendChild(t1); g.appendChild(t2);
+    },
+    electrical: { kind: "vsource" }
+  });
+
+  defineComponent("batteryExtreme", {
+    label: "Batteria estrema", labelPrefix: "B", size:{w:80,h:40},
+    terminals: [ {x:-40,y:0,name:"neg"}, {x:40,y:0,name:"pos"} ],
+    params: { voltage: 24, rint: 0.05 },
+    paramDefs: [
+      {key:"voltage", label:"Tensione (V)", min:0.1, max:2000, step:0.1, unit:"V"},
+      {key:"rint", label:"Resistenza interna (Ω)", min:0, max:50, step:0.01, unit:"Ω"}
+    ],
+    draw: COMP_DEFS.battery.draw,
+    electrical: { kind: "vsource" }
+  });
+
+  /* -------------------- RESISTORE -------------------- */
+  defineComponent("resistor", {
+    label: "Resistore", labelPrefix: "R", size:{w:80,h:40},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { resistance: 100 },
+    paramDefs: [ {key:"resistance", label:"Resistenza (Ω)", min:0.01, max:1e7, step:1, unit:"Ω"} ],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-24,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:24,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("path", {d:"M-24 0 L-18 -11 L-8 11 L2 -11 L12 11 L22 -11 L24 0", fill:"none", stroke:"var(--sc-accent-2)", "stroke-width":3, "stroke-linejoin":"round"}));
+    },
+    electrical: { kind:"resistor" }
+  });
+
+  defineComponent("resistorExtreme", {
+    label: "Resistore estremo", labelPrefix: "R", size:{w:80,h:40},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { resistance: 0.05 },
+    paramDefs: [ {key:"resistance", label:"Resistenza (Ω)", min:0.001, max:1e6, step:0.01, unit:"Ω"} ],
+    draw: COMP_DEFS.resistor.draw,
+    electrical: { kind:"resistor" }
+  });
+
+  /* -------------------- LAMPADINA -------------------- */
+  defineComponent("bulb", {
+    label: "Lampadina", labelPrefix: "La", size:{w:80,h:44},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { resistance: 24, ratedPower: 3 },
+    paramDefs: [
+      {key:"resistance", label:"Resistenza a freddo (Ω)", min:0.5, max:2000, step:0.5, unit:"Ω"},
+      {key:"ratedPower", label:"Potenza nominale (W)", min:0.05, max:500, step:0.05, unit:"W"}
+    ],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-20,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:20,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      var glow = svgEl("circle", {cx:0,cy:0,r:19,"data-role":"glow", fill:"var(--sc-accent-2)", opacity:0});
+      g.appendChild(glow);
+      g.appendChild(svgEl("circle", {cx:0,cy:0,r:19, fill:"none", stroke:"#8b95a8", "stroke-width":2.2}));
+      g.appendChild(svgEl("path", {d:"M-9 -8 L9 8 M-9 8 L9 -8", stroke:"#c9d2e0", "stroke-width":1.6, "data-role":"filament"}));
+    },
+    electrical: { kind:"bulb" }
+  });
+
+  defineComponent("bulbExtreme", {
+    label: "Lampadina estrema", labelPrefix: "La", size:{w:80,h:44},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { resistance: 2, ratedPower: 100 },
+    paramDefs: [
+      {key:"resistance", label:"Resistenza a freddo (Ω)", min:0.05, max:500, step:0.05, unit:"Ω"},
+      {key:"ratedPower", label:"Potenza nominale (W)", min:1, max:5000, step:1, unit:"W"}
+    ],
+    draw: COMP_DEFS.bulb.draw,
+    electrical: { kind:"bulb" }
+  });
+
+  /* -------------------- INTERRUTTORE -------------------- */
+  defineComponent("switch", {
+    label: "Interruttore", labelPrefix: "S", size:{w:80,h:40},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { closed: true },
+    paramDefs: [ {key:"closed", label:"Chiuso", type:"bool"} ],
+    draw: function(g, comp){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-22,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:22,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("circle", {cx:-22,cy:0,r:3.2, fill:"var(--sc-wire)"}));
+      g.appendChild(svgEl("circle", {cx:22,cy:0,r:3.2, fill:"var(--sc-wire)"}));
+      var lever = svgEl("line", {x1:-22,y1:0, x2:comp.params.closed?20:14, y2:comp.params.closed?0:-20, stroke:"var(--sc-accent-2)", "stroke-width":3.4, "stroke-linecap":"round", "data-role":"lever"});
+      g.appendChild(lever);
+    },
+    interactive: true,
+    onClick: function(comp){ comp.params.closed = !comp.params.closed; markDirty(); },
+    electrical: { kind:"switch" }
+  });
+
+  /* -------------------- FUSIBILE -------------------- */
+  defineComponent("fuse", {
+    label: "Fusibile", labelPrefix: "F", size:{w:80,h:40},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { resistance: 0.2, maxCurrent: 2, blown: false },
+    paramDefs: [
+      {key:"resistance", label:"Resistenza (Ω)", min:0.001, max:10, step:0.01, unit:"Ω"},
+      {key:"maxCurrent", label:"Corrente massima (A)", min:0.01, max:200, step:0.01, unit:"A"}
+    ],
+    draw: function(g, comp){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-24,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:24,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      var color = comp.params.blown ? "var(--sc-danger)" : "var(--sc-accent-2)";
+      g.appendChild(svgEl("rect", {x:-24,y:-12,width:48,height:24, rx:12, fill:"none", stroke:color, "stroke-width":2.4}));
+      if (comp.params.blown){
+        g.appendChild(svgEl("path", {d:"M-14 0 L-4 -7 L2 2 L14 0", fill:"none", stroke:color, "stroke-width":2}));
+      } else {
+        g.appendChild(svgEl("line", {x1:-18,y1:0,x2:18,y2:0, stroke:color, "stroke-width":1.6}));
+      }
+    },
+    electrical: { kind:"fuse" }
+  });
+
+  /* -------------------- CONDENSATORE -------------------- */
+  defineComponent("capacitor", {
+    label: "Condensatore", labelPrefix: "C", size:{w:80,h:40},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { capacitance: 100e-6, vc: 0 },
+    paramDefs: [ {key:"capacitance", label:"Capacit\u00e0 (F)", min:1e-9, max:1, step:1e-6, unit:"F"} ],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-6,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:6,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:-6,y1:-16,x2:-6,y2:16, stroke:"#7fd1ff", "stroke-width":3.5}));
+      g.appendChild(svgEl("line", {x1:6,y1:-16,x2:6,y2:16, stroke:"#7fd1ff", "stroke-width":3.5}));
+    },
+    electrical: { kind:"capacitor" }
+  });
+
+  /* -------------------- INDUTTORE -------------------- */
+  defineComponent("inductor", {
+    label: "Induttore", labelPrefix: "L", size:{w:80,h:40},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { inductance: 0.1, il: 0 },
+    paramDefs: [ {key:"inductance", label:"Induttanza (H)", min:1e-6, max:100, step:0.001, unit:"H"} ],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-30,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:30,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("path", {d:"M-30 0a7.5 7.5 0 0115 0 7.5 7.5 0 0115 0 7.5 7.5 0 0115 0 7.5 7.5 0 0115 0", fill:"none", stroke:"#c890ff", "stroke-width":2.6}));
+    },
+    electrical: { kind:"inductor" }
+  });
+
+  /* -------------------- DIODO -------------------- */
+  defineComponent("diode", {
+    label: "Diodo", labelPrefix: "D", size:{w:80,h:40},
+    terminals: [ {x:-40,y:0,name:"anode"}, {x:40,y:0,name:"cathode"} ],
+    params: { vf: 0.7 },
+    paramDefs: [ {key:"vf", label:"Tensione soglia (V)", min:0.05, max:5, step:0.05, unit:"V"} ],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-11,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:11,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("path", {d:"M-11 -13L-11 13L11 0Z", fill:"none", stroke:"#ff9d7a", "stroke-width":2.4, "stroke-linejoin":"round"}));
+      g.appendChild(svgEl("line", {x1:11,y1:-13,x2:11,y2:13, stroke:"#ff9d7a", "stroke-width":3}));
+    },
+    electrical: { kind:"diode" }
+  });
+
+  /* -------------------- LED -------------------- */
+  defineComponent("led", {
+    label: "LED", labelPrefix: "LED", size:{w:80,h:44},
+    terminals: [ {x:-40,y:0,name:"anode"}, {x:40,y:0,name:"cathode"} ],
+    params: { vf: 2.0, color: "#7fffb0" },
+    paramDefs: [ {key:"vf", label:"Tensione soglia (V)", min:1.2, max:4.5, step:0.05, unit:"V"} ],
+    draw: function(g, comp){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-11,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:11,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      var glow = svgEl("circle", {cx:0,cy:0,r:17,"data-role":"glow", fill: comp.params.color, opacity:0});
+      g.appendChild(glow);
+      g.appendChild(svgEl("path", {d:"M-11 -13L-11 13L11 0Z", fill:"none", stroke: comp.params.color, "stroke-width":2.4, "stroke-linejoin":"round", "data-role":"body"}));
+      g.appendChild(svgEl("line", {x1:11,y1:-13,x2:11,y2:13, stroke: comp.params.color, "stroke-width":3, "data-role":"body2"}));
+      g.appendChild(svgEl("path", {d:"M-4 -18l3 -6M2 -16l3-6", stroke: comp.params.color, "stroke-width":1.4}));
+    },
+    electrical: { kind:"led" }
+  });
+
+  /* -------------------- POTENZIOMETRO -------------------- */
+  defineComponent("potentiometer", {
+    label: "Potenziometro", labelPrefix: "P", size:{w:80,h:44},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { resistance: 1000, wiper: 0.5 },
+    paramDefs: [
+      {key:"resistance", label:"Resistenza max (Ω)", min:1, max:1e6, step:1, unit:"Ω"},
+      {key:"wiper", label:"Posizione cursore (0-1)", min:0, max:1, step:0.01, unit:""}
+    ],
+    draw: function(g, comp){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-24,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:24,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("path", {d:"M-24 0 L-18 -11 L-8 11 L2 -11 L12 11 L22 -11 L24 0", fill:"none", stroke:"var(--sc-accent-2)", "stroke-width":3, "stroke-linejoin":"round"}));
+      var wx = -24 + 48*clamp(comp.params.wiper,0,1);
+      g.appendChild(svgEl("line", {x1:wx,y1:-22,x2:wx,y2:-14, stroke:"#d8dee9", "stroke-width":2.2}));
+      g.appendChild(svgEl("path", {d:"M"+(wx-4)+" -22 L"+(wx+4)+" -22 L"+wx+" -10 Z", fill:"#d8dee9"}));
+    },
+    electrical: { kind:"resistor", dynamicResistance: function(comp){ return Math.max(1, comp.params.resistance * clamp(comp.params.wiper,0.001,1)); } }
+  });
+
+  /* -------------------- MOTORE DC -------------------- */
+  defineComponent("motor", {
+    label: "Motore DC", labelPrefix: "M", size:{w:80,h:44},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { resistance: 8 },
+    paramDefs: [ {key:"resistance", label:"Resistenza avvolgimento (Ω)", min:0.1, max:200, step:0.1, unit:"Ω"} ],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-19,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:19,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("circle", {cx:0,cy:0,r:19, fill:"none", stroke:"#9fd1ff", "stroke-width":2.4}));
+      var blade = svgEl("g", {"data-role":"rotor"});
+      blade.appendChild(svgEl("line", {x1:0,y1:-14,x2:0,y2:14, stroke:"#9fd1ff", "stroke-width":2}));
+      blade.appendChild(svgEl("line", {x1:-14,y1:0,x2:14,y2:0, stroke:"#9fd1ff", "stroke-width":2}));
+      g.appendChild(blade);
+      var lbl = svgEl("text", {x:0,y:26, "text-anchor":"middle", class:"sc-comp-label"}); lbl.textContent = "M";
+      g.appendChild(lbl);
+    },
+    electrical: { kind:"resistor" }
+  });
+
+  /* -------------------- CICALINO -------------------- */
+  defineComponent("buzzer", {
+    label: "Cicalino", labelPrefix: "Bz", size:{w:80,h:40},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { resistance: 40, minVoltage: 2.5 },
+    paramDefs: [
+      {key:"resistance", label:"Resistenza (Ω)", min:1, max:2000, step:1, unit:"Ω"},
+      {key:"minVoltage", label:"Tensione minima attivazione (V)", min:0.5, max:24, step:0.1, unit:"V"}
+    ],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-24,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:24,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("path", {d:"M-24 -12L6 -12A8 8 0 016 12L-24 12Z", fill:"none", stroke:"#ff9dd9", "stroke-width":2.4}));
+    },
+    electrical: { kind:"resistor" }
+  });
+
+  /* -------------------- GENERATORE AC -------------------- */
+  defineComponent("acsource", {
+    label: "Generatore AC", labelPrefix: "G", size:{w:80,h:44},
+    terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
+    params: { amplitude: 9, frequency: 1, rint: 0.5 },
+    paramDefs: [
+      {key:"amplitude", label:"Ampiezza (V picco)", min:0.1, max:1000, step:0.1, unit:"V"},
+      {key:"frequency", label:"Frequenza (Hz)", min:0.01, max:1000, step:0.01, unit:"Hz"},
+      {key:"rint", label:"Resistenza interna (Ω)", min:0, max:100, step:0.1, unit:"Ω"}
+    ],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-40,y1:0,x2:-19,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:19,y1:0,x2:40,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("circle", {cx:0,cy:0,r:19, fill:"none", stroke:"var(--sc-accent-2)", "stroke-width":2.4}));
+      g.appendChild(svgEl("path", {d:"M-11 0q4-10 8 0t8 0", fill:"none", stroke:"var(--sc-accent-2)", "stroke-width":2}));
+    },
+    electrical: { kind:"vsourceAC" }
+  });
+
+  /* -------------------- TRASFORMATORE -------------------- */
+  defineComponent("transformer", {
+    label: "Trasformatore", labelPrefix: "T", size:{w:100,h:70},
+    terminals: [
+      {x:-50,y:-22,name:"p1"}, {x:-50,y:22,name:"p2"},
+      {x:50,y:-22,name:"s1"}, {x:50,y:22,name:"s2"}
+    ],
+    params: { ratio: 2, lp: 0.5, coupling: 0.98, rprimary: 0.3, rsecondary: 0.3 },
+    paramDefs: [
+      {key:"ratio", label:"Rapporto spire (Ns/Np)", min:0.05, max:50, step:0.05, unit:""},
+      {key:"lp", label:"Induttanza primario (H)", min:0.001, max:50, step:0.001, unit:"H"},
+      {key:"coupling", label:"Coefficiente accoppiamento k", min:0.01, max:0.999, step:0.001, unit:""},
+      {key:"rprimary", label:"Resistenza avv. primario (Ω)", min:0, max:50, step:0.01, unit:"Ω"},
+      {key:"rsecondary", label:"Resistenza avv. secondario (Ω)", min:0, max:50, step:0.01, unit:"Ω"}
+    ],
+    draw: function(g, comp){
+      g.appendChild(svgEl("line", {x1:-50,y1:-22,x2:-14,y2:-22, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:-50,y1:22,x2:-14,y2:22, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:50,y1:-22,x2:14,y2:-22, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:50,y1:22,x2:14,y2:22, stroke:"var(--sc-wire)", "stroke-width":3}));
+      // avvolgimento primario (sinistra) — semicerchi impilati
+      var coilsP = [];
+      for (var i=0;i<4;i++){ coilsP.push("M-14 "+(-22+i*11.6)+" a6 5.8 0 000 11.6"); }
+      g.appendChild(svgEl("path", {d:coilsP.join(" "), fill:"none", stroke:"#c890ff", "stroke-width":2.2}));
+      // avvolgimento secondario (destra)
+      var coilsS = [];
+      for (var j=0;j<4;j++){ coilsS.push("M14 "+(-22+j*11.6)+" a6 5.8 0 010 11.6"); }
+      g.appendChild(svgEl("path", {d:coilsS.join(" "), fill:"none", stroke:"#9fd1ff", "stroke-width":2.2}));
+      // nucleo di ferro (due linee verticali)
+      g.appendChild(svgEl("line", {x1:-3,y1:-26,x2:-3,y2:26, stroke:"#8b95a8", "stroke-width":2.4}));
+      g.appendChild(svgEl("line", {x1:3,y1:-26,x2:3,y2:26, stroke:"#8b95a8", "stroke-width":2.4}));
+      var lbl = svgEl("text", {x:0,y:44, "text-anchor":"middle", class:"sc-comp-label"});
+      lbl.textContent = "1:" + round2(comp.params.ratio);
+      g.appendChild(lbl);
+    },
+    electrical: { kind:"transformer" }
+  });
+
+  /* -------------------- AMPLIFICATORE OPERAZIONALE -------------------- */
+  defineComponent("opamp", {
+    label: "Amplificatore Op.", labelPrefix: "U", size:{w:90,h:70},
+    terminals: [
+      {x:-45,y:-18,name:"inplus"}, {x:-45,y:18,name:"inminus"}, {x:45,y:0,name:"out"}
+    ],
+    params: { gain: 100000, vsupply: 12 },
+    paramDefs: [
+      {key:"gain", label:"Guadagno open-loop", min:100, max:1e7, step:100, unit:""},
+      {key:"vsupply", label:"Alimentazione ±V", min:1, max:60, step:0.5, unit:"V"}
+    ],
+    draw: function(g, comp){
+      g.appendChild(svgEl("line", {x1:-45,y1:-18,x2:-24,y2:-18, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:-45,y1:18,x2:-24,y2:18, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:24,y1:0,x2:45,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("path", {d:"M-24 -32L-24 32L24 0Z", fill:"none", stroke:"#7fd1ff", "stroke-width":2.4, "stroke-linejoin":"round"}));
+      var plus = svgEl("text", {x:-18,y:-13, class:"sc-comp-label", "font-size":13}); plus.textContent="+";
+      var minus = svgEl("text", {x:-18,y:23, class:"sc-comp-label", "font-size":13}); minus.textContent="−";
+      g.appendChild(plus); g.appendChild(minus);
+      var lbl = svgEl("text", {x:0,y:48, "text-anchor":"middle", class:"sc-comp-label"}); lbl.textContent = comp.label;
+      g.appendChild(lbl);
+    },
+    electrical: { kind:"opamp" }
+  });
+
+  /* -------------------- MASSA -------------------- */
+  defineComponent("ground", {
+    label: "Massa", labelPrefix: "GND", size:{w:40,h:40},
+    terminals: [ {x:0,y:-20,name:"a"} ],
+    params: {}, paramDefs: [],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:0,y1:-20,x2:0,y2:-6, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:-13,y1:-6,x2:13,y2:-6, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:-8,y1:0,x2:8,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:-3,y1:6,x2:3,y2:6, stroke:"var(--sc-wire)", "stroke-width":3}));
+    },
+    electrical: { kind:"ground" }
+  });
+
+  /* -------------------- VOLTMETRO -------------------- */
+  defineComponent("voltmeter", {
+    label: "Voltmetro", labelPrefix: "V", size:{w:60,h:44},
+    terminals: [ {x:-30,y:0,name:"a"}, {x:30,y:0,name:"b"} ],
+    params: {}, paramDefs: [],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-30,y1:0,x2:-17,y2:0, stroke:"var(--sc-wire)", "stroke-width":2.5, "stroke-dasharray":"3 2"}));
+      g.appendChild(svgEl("line", {x1:17,y1:0,x2:30,y2:0, stroke:"var(--sc-wire)", "stroke-width":2.5, "stroke-dasharray":"3 2"}));
+      g.appendChild(svgEl("circle", {cx:0,cy:0,r:17, fill:"var(--sc-panel-2)", stroke:"var(--sc-accent)", "stroke-width":2.4}));
+      var t = svgEl("text", {x:0,y:5,"text-anchor":"middle", fill:"var(--sc-accent)", "font-family":"var(--sc-font-mono)", "font-size":13, "font-weight":700, "data-role":"reading"});
+      t.textContent = "V";
+      g.appendChild(t);
+    },
+    electrical: { kind:"voltmeter" }
+  });
+
+  /* -------------------- AMPEROMETRO -------------------- */
+  defineComponent("ammeter", {
+    label: "Amperometro", labelPrefix: "A", size:{w:60,h:44},
+    terminals: [ {x:-30,y:0,name:"a"}, {x:30,y:0,name:"b"} ],
+    params: {}, paramDefs: [],
+    draw: function(g){
+      g.appendChild(svgEl("line", {x1:-30,y1:0,x2:-17,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("line", {x1:17,y1:0,x2:30,y2:0, stroke:"var(--sc-wire)", "stroke-width":3}));
+      g.appendChild(svgEl("circle", {cx:0,cy:0,r:17, fill:"var(--sc-panel-2)", stroke:"var(--sc-accent)", "stroke-width":2.4}));
+      var t = svgEl("text", {x:0,y:5,"text-anchor":"middle", fill:"var(--sc-accent)", "font-family":"var(--sc-font-mono)", "font-size":13, "font-weight":700, "data-role":"reading"});
+      t.textContent = "A";
+      g.appendChild(t);
+    },
+    electrical: { kind:"ammeter" }
+  });
+
+  function nextLabelFor(type){
+    var def = COMP_DEFS[type];
+    var pre = def.labelPrefix || "X";
+    SC.state.nextCompNumber[pre] = (SC.state.nextCompNumber[pre]||0) + 1;
+    return pre + SC.state.nextCompNumber[pre];
+  }
+
+  function markDirty(){ SC.state.dirty = true; }
+
+  /* ============================================================
+   *  TOPOLOGIA — costruzione grafo nodi dai terminali collegati
+   * ============================================================ */
+
+  function worldTerminalPos(comp, termName){
+    var def = COMP_DEFS[comp.type];
+    var term = null;
+    for (var i=0;i<def.terminals.length;i++){ if (def.terminals[i].name === termName){ term = def.terminals[i]; break; } }
+    if (!term) return {x:comp.x, y:comp.y};
+    var rad = (comp.rot||0) * Math.PI/180;
+    var cos = Math.cos(rad), sin = Math.sin(rad);
+    var lx = term.x, ly = term.y;
+    var rx = lx*cos - ly*sin, ry = lx*sin + ly*cos;
+    return { x: comp.x + rx, y: comp.y + ry };
+  }
+
+  function allTerminalRefs(){
+    var refs = [];
+    Object.keys(SC.state.components).forEach(function(id){
+      var comp = SC.state.components[id];
+      var def = COMP_DEFS[comp.type];
+      def.terminals.forEach(function(t){
+        var p = worldTerminalPos(comp, t.name);
+        refs.push({ key: id+"::"+t.name, compId:id, term:t.name, x:p.x, y:p.y });
+      });
+    });
+    return refs;
+  }
+
+  function UnionFind(){ this.parent = {}; }
+  UnionFind.prototype.find = function(a){
+    if (!(a in this.parent)) this.parent[a] = a;
+    var root = a;
+    while (this.parent[root] !== root) root = this.parent[root];
+    var cur = a;
+    while (this.parent[cur] !== root){ var next = this.parent[cur]; this.parent[cur] = root; cur = next; }
+    return root;
+  };
+  UnionFind.prototype.union = function(a,b){
+    var ra = this.find(a), rb = this.find(b);
+    if (ra !== rb) this.parent[ra] = rb;
+  };
+
+  function endpointKey(ep){
+    if (ep.compId) return ep.compId + "::" + ep.term;
+    return "free::" + ep.freeId;
+  }
+
+  function buildTopology(){
+    var uf = new UnionFind();
+    var wires = SC.state.wires;
+    Object.keys(wires).forEach(function(wid){
+      var w = wires[wid];
+      uf.union(endpointKey(w.a), endpointKey(w.b));
+    });
+    Object.keys(SC.state.components).forEach(function(id){
+      var comp = SC.state.components[id];
+      var def = COMP_DEFS[comp.type];
+      if (def.isWireLike){ uf.union(id+"::a", id+"::b"); }
+    });
+    var nodeIds = {};
+    var counter = 0;
+    function nodeFor(key){
+      var root = uf.find(key);
+      if (!(root in nodeIds)){ nodeIds[root] = "n" + (counter++); }
+      return nodeIds[root];
+    }
+    return { uf: uf, nodeFor: nodeFor };
+  }
+
+  /* ============================================================
+   *  SOLUTORE CIRCUITALE — Modified Nodal Analysis
+   * ============================================================ */
+
+  var PHYS = { VT: 0.026, ISAT: 1e-9, GMIN: 1e-9 };
+
+  function solveCircuit(dt){
+    var topo = buildTopology();
+    var comps = SC.state.components;
+
+    var nodeSet = {};
+    var refs = allTerminalRefs();
+    refs.forEach(function(r){ nodeSet[topo.nodeFor(r.key)] = true; });
+    Object.keys(SC.state.wires).forEach(function(wid){
+      var w = SC.state.wires[wid];
+      nodeSet[topo.nodeFor(endpointKey(w.a))] = true;
+      nodeSet[topo.nodeFor(endpointKey(w.b))] = true;
+    });
+
+    var nodeList = Object.keys(nodeSet);
+    var nodeIndex = {};
+    nodeList.forEach(function(n,i){ nodeIndex[n] = i; });
+    var N = nodeList.length;
+
+    var groundNode = null;
+    Object.keys(comps).forEach(function(id){
+      if (comps[id].type === "ground"){
+        groundNode = topo.nodeFor(id+"::a");
+      }
+    });
+    if (groundNode === null && nodeList.length){ groundNode = nodeList[0]; }
+
+    var voltageBranches = [];
+    Object.keys(comps).forEach(function(id){
+      var comp = comps[id];
+      var el = COMP_DEFS[comp.type].electrical;
+      if (!el) return;
+      if (el.kind === "vsource" || el.kind === "vsourceAC" || el.kind === "ammeter" || el.kind === "opamp"){
+        voltageBranches.push({ id:id, kind: el.kind });
+      }
+    });
+
+    var M = N + voltageBranches.length;
+    if (M === 0){
+      return { ok:false, reason:"empty", V:{}, I:{}, nodeIndex:nodeIndex, nodeFor: topo.nodeFor, groundNode: groundNode };
+    }
+
+    var x = new Array(M).fill(0);
+    var prevSolved = SC.state.solved;
+    if (prevSolved && prevSolved.xRaw && prevSolved.xRaw.length === M){ x = prevSolved.xRaw.slice(); }
+
+    var branchIndexOf = {};
+    voltageBranches.forEach(function(b,i){ branchIndexOf[b.id] = N + i; });
+
+    function idxNode(nodeId){
+      if (nodeId === groundNode) return -1;
+      return nodeIndex[nodeId];
+    }
+
+    var maxIter = 40;
+    var converged = false;
+
+    for (var iter=0; iter<maxIter; iter++){
+      var A = [];
+      for (var r=0;r<M;r++){ A.push(new Array(M).fill(0)); }
+      var Bv = new Array(M).fill(0);
+
+      function stampG(n1, n2, g){
+        if (n1>=0){ A[n1][n1]+=g; }
+        if (n2>=0){ A[n2][n2]+=g; }
+        if (n1>=0 && n2>=0){ A[n1][n2]-=g; A[n2][n1]-=g; }
+      }
+      function stampI(n1, n2, i){
+        if (n1>=0) Bv[n1] -= i;
+        if (n2>=0) Bv[n2] += i;
+      }
+      function vAt(nodeId){
+        var i = idxNode(nodeId);
+        return i<0 ? 0 : x[i];
+      }
+
+      Object.keys(comps).forEach(function(id){
+        var comp = comps[id];
+        var def = COMP_DEFS[comp.type];
+        var el = def.electrical;
+        if (!el || def.isWireLike) return;
+        var terms = def.terminals;
+
+        if (el.kind === "resistor" || el.kind === "fuse" || el.kind === "switch" || el.kind === "voltmeter" || el.kind === "bulb"){
+          var nA = topo.nodeFor(id+"::"+terms[0].name);
+          var nB = topo.nodeFor(id+"::"+terms[1].name);
+          var iA = idxNode(nA), iB = idxNode(nB);
+          var R;
+          if (el.kind === "voltmeter"){ R = 1e12; }
+          else if (el.kind === "switch"){ R = comp.params.closed ? 1e-3 : 1e9; }
+          else if (el.kind === "fuse"){ R = comp.params.blown ? 1e9 : comp.params.resistance; }
+          else if (el.kind === "bulb"){
+            var prevI = (SC.state.solved && SC.state.solved.I[id]) || 0;
+            var warmFactor = 1 + Math.min(3.5, Math.abs(prevI) * 0.9);
+            R = comp.params.resistance * warmFactor;
+          } else if (el.dynamicResistance){ R = el.dynamicResistance(comp); }
+          else { R = comp.params.resistance; }
+          R = Math.max(R, 1e-6);
+          stampG(iA, iB, 1/R);
+        }
+        else if (el.kind === "capacitor"){
+          var nA2 = topo.nodeFor(id+"::"+terms[0].name);
+          var nB2 = topo.nodeFor(id+"::"+terms[1].name);
+          var ia2 = idxNode(nA2), ib2 = idxNode(nB2);
+          var Cval = Math.max(comp.params.capacitance, 1e-15);
+          var Geq = (2*Cval)/Math.max(dt, 1e-6);
+          var vPrev = comp.params.vc || 0;
+          var iPrev = comp._iPrev || 0;
+          var Ieq = -Geq*vPrev - iPrev;
+          stampG(ia2, ib2, Geq);
+          stampI(ia2, ib2, -Ieq);
+        }
+        else if (el.kind === "inductor"){
+          var nA3 = topo.nodeFor(id+"::"+terms[0].name);
+          var nB3 = topo.nodeFor(id+"::"+terms[1].name);
+          var ia3 = idxNode(nA3), ib3 = idxNode(nB3);
+          var Lval = Math.max(comp.params.inductance, 1e-9);
+          var Geq2 = Math.max(dt, 1e-6)/(2*Lval);
+          var iPrevL = comp.params.il || 0;
+          var vPrevL = comp._vPrev || 0;
+          var Ieq2 = iPrevL + Geq2*vPrevL;
+          stampG(ia3, ib3, Geq2);
+          stampI(ia3, ib3, Ieq2);
+        }
+        else if (el.kind === "diode" || el.kind === "led"){
+          var nA4 = topo.nodeFor(id+"::"+terms[0].name);
+          var nB4 = topo.nodeFor(id+"::"+terms[1].name);
+          var ia4 = idxNode(nA4), ib4 = idxNode(nB4);
+          var vd = vAt(nA4) - vAt(nB4);
+          var Vf = comp.params.vf;
+          var n = 1.9;
+          var Vt = PHYS.VT * n;
+          var vShift = vd - Vf;
+          var expArg = clamp(vShift/Vt, -40, 40);
+          var Id = PHYS.ISAT * (Math.exp(expArg) - 1) + PHYS.GMIN*vd;
+          var Gd = (PHYS.ISAT/Vt) * Math.exp(expArg) + PHYS.GMIN;
+          Gd = Math.max(Gd, PHYS.GMIN);
+          var Ieq3 = Id - Gd*vd;
+          stampG(ia4, ib4, Gd);
+          stampI(ia4, ib4, -Ieq3);
+        }
+        else if (el.kind === "transformer"){
+          // Modello a due induttori accoppiati (primario Lp, secondario Ls=Lp*ratio^2, mutua M=k*sqrt(Lp*Ls))
+          // Companion trapezoidale su sistema 2x2: v = L di/dt  ->  discretizzato in Norton equivalente accoppiato.
+          var nP1 = topo.nodeFor(id+"::p1"), nP2 = topo.nodeFor(id+"::p2");
+          var nS1 = topo.nodeFor(id+"::s1"), nS2 = topo.nodeFor(id+"::s2");
+          var ip1=idxNode(nP1), ip2=idxNode(nP2), is1=idxNode(nS1), is2=idxNode(nS2);
+          var Lp = Math.max(comp.params.lp, 1e-6);
+          var ratio = comp.params.ratio;
+          var Ls = Lp * ratio * ratio;
+          var k = clamp(comp.params.coupling, 0.01, 0.999);
+          var Mut = k * Math.sqrt(Lp*Ls);
+          var h = Math.max(dt, 1e-6);
+          // Matrice induttanza 2x2 [[Lp,M],[M,Ls]] -> inversa analitica
+          var det = Lp*Ls - Mut*Mut;
+          if (Math.abs(det) < 1e-15) det = 1e-15;
+          var g11 =  Ls/det, g12 = -Mut/det, g21 = -Mut/det, g22 = Lp/det;
+          // Discretizzazione trapezoidale: i(t) = i(t-h) + (h/2)*Ginv*(v(t)+v(t-h))
+          var vpPrev = comp._vpPrev||0, vsPrev = comp._vsPrev||0;
+          var ipPrev = comp._ipPrev||0, isPrev = comp._isPrev||0;
+          var factor = h/2;
+          // correnti equivalenti storiche (source Norton)
+          var IeqP = ipPrev + factor*(g11*vpPrev + g12*vsPrev);
+          var IeqS = isPrev + factor*(g21*vpPrev + g22*vsPrev);
+          var Gpp = factor*g11, Gps = factor*g12, Gsp = factor*g21, Gss = factor*g22;
+          // stampa conduttanze mutue a 4 nodi (primario: p1(+)-p2(-), secondario: s1(+)-s2(-))
+          function stampMutual(nA, nB, nC, nD, gval){
+            // corrente aggiuntiva tra A-B dipendente da v(C)-v(D), stampata simmetricamente
+            if (nA>=0 && nC>=0) A[nA][nC]+=gval;
+            if (nA>=0 && nD>=0) A[nA][nD]-=gval;
+            if (nB>=0 && nC>=0) A[nB][nC]-=gval;
+            if (nB>=0 && nD>=0) A[nB][nD]+=gval;
+          }
+          stampMutual(ip1, ip2, ip1, ip2, Gpp);
+          stampMutual(ip1, ip2, is1, is2, Gps);
+          stampMutual(is1, is2, ip1, ip2, Gsp);
+          stampMutual(is1, is2, is1, is2, Gss);
+          stampI(ip1, ip2, -IeqP);
+          stampI(is1, is2, -IeqS);
+        }
+      });
+
+      voltageBranches.forEach(function(b){
+        var comp = comps[b.id];
+        var def = COMP_DEFS[comp.type];
+        var bi = branchIndexOf[b.id];
+        if (b.kind === "vsource"){
+          var nNeg = topo.nodeFor(b.id+"::neg");
+          var nPos = topo.nodeFor(b.id+"::pos");
+          var iNeg = idxNode(nNeg), iPos = idxNode(nPos);
+          var Rint = Math.max(comp.params.rint || 0, 1e-4);
+          if (iPos>=0){ A[iPos][bi]+=1; A[bi][iPos]+=1; }
+          if (iNeg>=0){ A[iNeg][bi]-=1; A[bi][iNeg]-=1; }
+          A[bi][bi] -= Rint;
+          Bv[bi] += comp.params.voltage;
+        } else if (b.kind === "opamp"){
+          // Sorgente di tensione controllata: Vout = clamp(gain*(V+ - V-), ±Vsupply)
+          // Linearizzata attorno alla soluzione corrente (Newton) per stabilità numerica.
+          var nPlus = topo.nodeFor(b.id+"::inplus");
+          var nMinus = topo.nodeFor(b.id+"::inminus");
+          var nOut = topo.nodeFor(b.id+"::out");
+          var iPlus = idxNode(nPlus), iMinus = idxNode(nMinus), iOut = idxNode(nOut);
+          var vPlus = vAt(nPlus), vMinus = vAt(nMinus);
+          var vin = vPlus - vMinus;
+          var gain = comp.params.gain;
+          var vsup = comp.params.vsupply;
+          var vraw = gain*vin;
+          var vout_target = clamp(vraw, -vsup, vsup);
+          // se in saturazione la derivata rispetto a vin è ~0 (uscita bloccata): usiamo gain effettivo ridotto
+          var inSat = Math.abs(vraw) > vsup;
+          var geff = inSat ? 1e-6 : gain;
+          // Equazione branch: Vout - geff*(V+ - V-) = (vout_target - geff*vin) [termine noto linearizzato]
+          if (iOut>=0){ A[iOut][bi]+=1; A[bi][iOut]+=1; }
+          if (iPlus>=0){ A[bi][iPlus] -= geff; }
+          if (iMinus>=0){ A[bi][iMinus] += geff; }
+          Bv[bi] += (vout_target - geff*vin);
+          // ingresso op-amp idealmente non assorbe corrente (impedenza infinita): nessuno stamp su + e -
+        } else if (b.kind === "vsourceAC"){
+          var nA5 = topo.nodeFor(b.id+"::a");
+          var nB5 = topo.nodeFor(b.id+"::b");
+          var iA5 = idxNode(nA5), iB5 = idxNode(nB5);
+          var Rint2 = Math.max(comp.params.rint || 0, 1e-4);
+          if (iB5>=0){ A[iB5][bi]+=1; A[bi][iB5]+=1; }
+          if (iA5>=0){ A[iA5][bi]-=1; A[bi][iA5]-=1; }
+          A[bi][bi] -= Rint2;
+          var w = 2*Math.PI*(comp.params.frequency||1);
+          var vNow = comp.params.amplitude * Math.sin(w * SC.state.time);
+          Bv[bi] += vNow;
+        } else if (b.kind === "ammeter"){
+          var nA6 = topo.nodeFor(b.id+"::a");
+          var nB6 = topo.nodeFor(b.id+"::b");
+          var iA6 = idxNode(nA6), iB6 = idxNode(nB6);
+          if (iA6>=0){ A[iA6][bi]+=1; A[bi][iA6]+=1; }
+          if (iB6>=0){ A[iB6][bi]-=1; A[bi][iB6]-=1; }
+        }
+      });
+
+      if (groundNode === null && N>0){ A[0][0] += 1e-9; }
+
+      var solved = gaussSolve(A, Bv);
+      if (!solved){ return { ok:false, reason:"singular", V:{}, I:{} }; }
+
+      var maxDelta = 0;
+      for (var k=0;k<M;k++){ maxDelta = Math.max(maxDelta, Math.abs(solved[k]-x[k])); }
+      x = solved;
+      if (maxDelta < 1e-7){ converged = true; break; }
+    }
+
+    var V = {};
+    nodeList.forEach(function(n){ V[n] = (n===groundNode)?0:x[nodeIndex[n]]; });
+    function vNode(nodeId){ return nodeId===groundNode?0:(nodeIndex[nodeId]!=null? x[nodeIndex[nodeId]] : 0); }
+
+    var I = {};
+    var Vcomp = {};
+    Object.keys(comps).forEach(function(id){
+      var comp = comps[id];
+      var def = COMP_DEFS[comp.type];
+      var el = def.electrical;
+      if (!el || def.isWireLike){ I[id]=0; Vcomp[id]=0; return; }
+      var terms = def.terminals;
+      if (terms.length < 2){ I[id]=0; Vcomp[id]=0; return; }
+      var nA = topo.nodeFor(id+"::"+terms[0].name);
+      var nB = topo.nodeFor(id+"::"+terms[1].name);
+      var vA = vNode(nA), vB = vNode(nB);
+      var vDiff = vA - vB;
+      Vcomp[id] = vDiff;
+
+      if (el.kind === "vsource" || el.kind === "vsourceAC" || el.kind === "ammeter" || el.kind === "opamp"){
+        var bi2 = branchIndexOf[id];
+        I[id] = x[bi2];
+        if (el.kind === "vsource"){
+          Vcomp[id] = vNode(topo.nodeFor(id+"::pos")) - vNode(topo.nodeFor(id+"::neg"));
+        } else if (el.kind === "opamp"){
+          Vcomp[id] = vNode(topo.nodeFor(id+"::out"));
+        }
+      } else if (el.kind === "transformer"){
+        var vP = vNode(topo.nodeFor(id+"::p1")) - vNode(topo.nodeFor(id+"::p2"));
+        var vS = vNode(topo.nodeFor(id+"::s1")) - vNode(topo.nodeFor(id+"::s2"));
+        Vcomp[id] = vP;
+        comp._vSecondary = vS; // usato per inspector/analisi
+        var LpT = Math.max(comp.params.lp,1e-6);
+        var ratioT = comp.params.ratio;
+        var LsT = LpT*ratioT*ratioT;
+        var kT = clamp(comp.params.coupling,0.01,0.999);
+        var MutT = kT*Math.sqrt(LpT*LsT);
+        var hT = Math.max(dt,1e-6);
+        var detT = LpT*LsT - MutT*MutT; if (Math.abs(detT)<1e-15) detT=1e-15;
+        var g11T=LsT/detT, g12T=-MutT/detT, g21T=-MutT/detT, g22T=LpT/detT;
+        var vpPrevT=comp._vpPrev||0, vsPrevT=comp._vsPrev||0;
+        var ipPrevT=comp._ipPrev||0, isPrevT=comp._isPrev||0;
+        var factorT=hT/2;
+        var ip = ipPrevT + factorT*(g11T*vpPrevT+g12T*vsPrevT) + factorT*(g11T*vP+g12T*vS);
+        var is = isPrevT + factorT*(g21T*vpPrevT+g22T*vsPrevT) + factorT*(g21T*vP+g22T*vS);
+        I[id] = ip;
+        comp._isCurrent = is;
+        comp._vpPrev = vP; comp._vsPrev = vS;
+        comp._ipPrev = ip; comp._isPrev = is;
+      } else if (el.kind === "capacitor"){
+        var Cval2 = Math.max(comp.params.capacitance,1e-15);
+        var Geq3 = (2*Cval2)/Math.max(dt,1e-6);
+        var vPrev2 = comp.params.vc||0;
+        var iPrev2 = comp._iPrev||0;
+        I[id] = Geq3*vDiff - Geq3*vPrev2 - iPrev2;
+      } else if (el.kind === "inductor"){
+        var Lval2 = Math.max(comp.params.inductance,1e-9);
+        var Geq4 = Math.max(dt,1e-6)/(2*Lval2);
+        var iPrevL2 = comp.params.il||0;
+        var vPrevL2 = comp._vPrev||0;
+        I[id] = iPrevL2 + Geq4*vPrevL2 + Geq4*vDiff;
+      } else if (el.kind === "diode" || el.kind === "led"){
+        var Vf2 = comp.params.vf; var n2=1.9; var Vt2=PHYS.VT*n2;
+        var vShift2 = vDiff - Vf2;
+        var expArg2 = clamp(vShift2/Vt2,-40,40);
+        I[id] = PHYS.ISAT*(Math.exp(expArg2)-1) + PHYS.GMIN*vDiff;
+      } else {
+        var R2;
+        if (el.kind === "voltmeter") R2 = 1e12;
+        else if (el.kind === "switch") R2 = comp.params.closed ? 1e-3 : 1e9;
+        else if (el.kind === "fuse") R2 = comp.params.blown ? 1e9 : comp.params.resistance;
+        else if (el.kind === "bulb"){
+          var prevI2 = (SC.state.solved && SC.state.solved.I[id]) || 0;
+          R2 = comp.params.resistance * (1+Math.min(3.5, Math.abs(prevI2)*0.9));
+        }
+        else if (el.dynamicResistance) R2 = el.dynamicResistance(comp);
+        else R2 = comp.params.resistance;
+        R2 = Math.max(R2,1e-6);
+        I[id] = vDiff / R2;
+      }
+    });
+
+    Object.keys(comps).forEach(function(id){
+      var comp = comps[id];
+      var el = COMP_DEFS[comp.type].electrical;
+      if (!el) return;
+      if (el.kind === "capacitor"){ comp.params.vc = Vcomp[id]; comp._iPrev = I[id]; }
+      if (el.kind === "inductor"){ comp.params.il = I[id]; comp._vPrev = Vcomp[id]; }
+      if (el.kind === "fuse" && !comp.params.blown){
+        if (Math.abs(I[id]) > comp.params.maxCurrent){ comp.params.blown = true; }
+      }
+    });
+
+    return {
+      ok: true, converged: converged,
+      V: V, I: I, Vcomp: Vcomp,
+      xRaw: x, nodeIndex: nodeIndex, nodeFor: topo.nodeFor, groundNode: groundNode
+    };
+  }
+
+  function gaussSolve(A, b){
+    var n = b.length;
+    var M = [];
+    for (var i=0;i<n;i++){ M.push(A[i].slice()); M[i].push(b[i]); }
+    for (var col=0; col<n; col++){
+      var pivotRow = col;
+      var maxAbs = Math.abs(M[col][col]);
+      for (var r=col+1;r<n;r++){
+        if (Math.abs(M[r][col]) > maxAbs){ maxAbs = Math.abs(M[r][col]); pivotRow = r; }
+      }
+      if (maxAbs < 1e-12){ continue; }
+      if (pivotRow !== col){ var tmp=M[col]; M[col]=M[pivotRow]; M[pivotRow]=tmp; }
+      var pivotVal = M[col][col];
+      for (var c2=col;c2<=n;c2++){ M[col][c2] /= pivotVal; }
+      for (var r2=0;r2<n;r2++){
+        if (r2===col) continue;
+        var factor = M[r2][col];
+        if (factor===0) continue;
+        for (var c3=col;c3<=n;c3++){ M[r2][c3] -= factor*M[col][c3]; }
+      }
+    }
+    var x = new Array(n).fill(0);
+    for (var k=0;k<n;k++){ x[k] = isFinite(M[k][n]) ? M[k][n] : 0; }
+    return x;
+  }
+
+  /* ============================================================
+   *  RENDERING & INTERAZIONE
+   * ============================================================ */
+
+  var stageSvg = $('[data-role="stage"]');
+  var worldG = $('[data-role="world"]');
+  var wireLayer = $('[data-role="wire-layer"]');
+  var compLayer = $('[data-role="comp-layer"]');
+  var fxLayer = $('[data-role="fx-layer"]');
+  var stageWrap = $('[data-role="stage-wrap"]');
+  var toolboxEl = $('[data-role="toolbox"]');
+  var hintEl = $('[data-role="hint"]');
+  var toastEl = $('[data-role="toast"]');
+  var inspectorEl = $('[data-role="inspector"]');
+  var analysisEl = $('[data-role="analysis"]');
+  var scopeCanvas = $('[data-role="scope"]');
+  var scopeCtx = scopeCanvas.getContext("2d");
+  var scopeLegend = $('[data-role="scope-legend"]');
+  var fileInput = $('[data-role="file-input"]');
+
+  function toast(msg, kind){
+    toastEl.textContent = msg;
+    toastEl.className = "sc-toast sc-show" + (kind ? " sc-toast-"+kind : "");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ toastEl.classList.remove("sc-show"); }, 2400);
+  }
+
+  function applyViewTransform(){
+    var v = SC.state.view;
+    worldG.setAttribute("transform", "translate(" + v.x + "," + v.y + ") scale(" + v.zoom + ")");
+  }
+  applyViewTransform();
+
+  function screenToWorld(clientX, clientY){
+    var rect = stageSvg.getBoundingClientRect();
+    var sx = clientX - rect.left;
+    var sy = clientY - rect.top;
+    var v = SC.state.view;
+    return { x: (sx - v.x) / v.zoom, y: (sy - v.y) / v.zoom };
+  }
+
+  /* ---------------- Creazione / rimozione componenti ---------------- */
+
+  function addComponent(type, x, y, opts){
+    var def = COMP_DEFS[type];
+    if (!def) return null;
+    var id = uid("c");
+    var comp = {
+      id: id, type: type,
+      x: snap(x), y: snap(y), rot: (opts && opts.rot) || 0,
+      label: (opts && opts.label) || nextLabelFor(type),
+      params: JSON.parse(JSON.stringify(def.params))
+    };
+    if (opts && opts.params){ for (var k in opts.params){ comp.params[k] = opts.params[k]; } }
+    SC.state.components[id] = comp;
+    renderComponent(comp);
+    markDirty();
+    return comp;
+  }
+
+  function removeComponent(id){
+    var comp = SC.state.components[id];
+    if (!comp) return;
+    // rimuovi wire collegati a questo componente
+    Object.keys(SC.state.wires).forEach(function(wid){
+      var w = SC.state.wires[wid];
+      if ((w.a.compId===id) || (w.b.compId===id)){ removeWire(wid); }
+    });
+    var g = $('[data-id="'+id+'"]', compLayer);
+    if (g) g.remove();
+    delete SC.state.components[id];
+    if (SC.state.selection === id){ selectComponent(null); }
+    markDirty();
+  }
+
+  function addWire(a, b){
+    var id = uid("w");
+    SC.state.wires[id] = { id:id, a:a, b:b };
+    renderWire(SC.state.wires[id]);
+    markDirty();
+    return SC.state.wires[id];
+  }
+  function removeWire(id){
+    var g = $('[data-wid="'+id+'"]', wireLayer);
+    if (g) g.remove();
+    delete SC.state.wires[id];
+    markDirty();
+  }
+
+  /* ---------------- Render componente ---------------- */
+
+  function renderComponent(comp){
+    var def = COMP_DEFS[comp.type];
+    var existing = $('[data-id="'+comp.id+'"]', compLayer);
+    if (existing) existing.remove();
+
+    var g = svgEl("g", {
+      class: "sc-comp" + (SC.state.selection===comp.id ? " sc-selected":""),
+      "data-id": comp.id,
+      transform: "translate("+comp.x+","+comp.y+") rotate("+(comp.rot||0)+")"
+    });
+
+    var w = def.size.w, h = def.size.h;
+    var outline = svgEl("rect", { class:"sc-comp-outline", x:-w/2-6, y:-h/2-6, width:w+12, height:h+12, rx:8 });
+    g.appendChild(outline);
+
+    def.draw(g, comp);
+
+    // terminali (pallini)
+    def.terminals.forEach(function(t){
+      var dot = svgEl("circle", { class:"sc-node-dot", cx:t.x, cy:t.y, r:4.2, "data-term":t.name });
+      g.appendChild(dot);
+    });
+
+    // etichetta / valore
+    if (SC.state.showLabels){
+      var lbl = svgEl("text", { x:0, y: h/2 + 16, class:"sc-comp-label", "text-anchor":"middle" });
+      lbl.textContent = comp.label;
+      g.appendChild(lbl);
+    }
+    if (SC.state.showValues){
+      var valTxt = componentValueLabel(comp);
+      if (valTxt){
+        var val = svgEl("text", { x:0, y: h/2 + 30, class:"sc-comp-value", "text-anchor":"middle" });
+        val.textContent = valTxt;
+        g.appendChild(val);
+      }
+    }
+
+    compLayer.appendChild(g);
+    attachComponentEvents(g, comp);
+    return g;
+  }
+
+  function componentValueLabel(comp){
+    var def = COMP_DEFS[comp.type];
+    var el = def.electrical;
+    if (!el) return "";
+    switch(el.kind){
+      case "vsource": return fmtUnit(comp.params.voltage,"V");
+      case "vsourceAC": return fmtUnit(comp.params.amplitude,"Vpk") + " " + fmtUnit(comp.params.frequency,"Hz");
+      case "resistor": return def.dynamicResistance ? fmtUnit(def.dynamicResistance(comp),"Ω") : fmtUnit(comp.params.resistance,"Ω");
+      case "bulb": return fmtUnit(comp.params.resistance,"Ω");
+      case "capacitor": return fmtUnit(comp.params.capacitance,"F");
+      case "inductor": return fmtUnit(comp.params.inductance,"H");
+      case "diode": case "led": return fmtUnit(comp.params.vf,"V");
+      case "fuse": return fmtUnit(comp.params.maxCurrent,"A");
+      default: return "";
+    }
+  }
+
+  function renderWire(w){
+    var existing = $('[data-wid="'+w.id+'"]', wireLayer);
+    if (existing) existing.remove();
+    var pa = endpointPos(w.a), pb = endpointPos(w.b);
+    var g = svgEl("g", { "data-wid": w.id });
+    var hit = svgEl("path", { class:"sc-wire-hit", d: "M"+pa.x+" "+pa.y+" L"+pb.x+" "+pb.y });
+    var path = svgEl("path", { class:"sc-wire-path", d: "M"+pa.x+" "+pa.y+" L"+pb.x+" "+pb.y });
+    g.appendChild(hit); g.appendChild(path);
+    wireLayer.appendChild(g);
+
+    hit.addEventListener("click", function(ev){
+      ev.stopPropagation();
+      if (SC.state.tool === "delete"){ removeWire(w.id); toast("Filo eliminato"); }
+    });
+    hit.addEventListener("contextmenu", function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      showContextMenu(ev.clientX, ev.clientY, [
+        { label:"Elimina filo", danger:true, action: function(){ removeWire(w.id); } }
+      ]);
+    });
+  }
+
+  function endpointPos(ep){
+    if (ep.compId){
+      var comp = SC.state.components[ep.compId];
+      if (!comp) return {x:0,y:0};
+      return worldTerminalPos(comp, ep.term);
+    }
+    return { x: ep.x, y: ep.y };
+  }
+
+  function refreshAllWires(){
+    Object.keys(SC.state.wires).forEach(function(wid){ renderWire(SC.state.wires[wid]); });
+  }
+
+  /* ---------------- Eventi componente: drag, click, rotate, menu ---------------- */
+
+  function attachComponentEvents(g, comp){
+    var def = COMP_DEFS[comp.type];
+    var dragState = null;
+
+    g.addEventListener("pointerdown", function(ev){
+      if (ev.button !== 0) return;
+      var targetTerm = ev.target.getAttribute && ev.target.getAttribute("data-term");
+      if (SC.state.tool === "wire" || targetTerm){
+        ev.stopPropagation();
+        startWireDraw({ compId: comp.id, term: targetTerm || def.terminals[0].name }, ev);
+        return;
+      }
+      if (SC.state.tool === "delete"){
+        ev.stopPropagation();
+        removeComponent(comp.id);
+        toast("Componente eliminato");
+        return;
+      }
+      ev.stopPropagation();
+      selectComponent(comp.id);
+      var startWorld = screenToWorld(ev.clientX, ev.clientY);
+      dragState = { startX: comp.x, startY: comp.y, startWorld: startWorld, moved:false };
+      g.setPointerCapture(ev.pointerId);
+
+      function onMove(mv){
+        var w = screenToWorld(mv.clientX, mv.clientY);
+        var dx = w.x - dragState.startWorld.x;
+        var dy = w.y - dragState.startWorld.y;
+        if (Math.abs(dx)>2 || Math.abs(dy)>2) dragState.moved = true;
+        comp.x = snap(dragState.startX + dx);
+        comp.y = snap(dragState.startY + dy);
+        g.setAttribute("transform", "translate("+comp.x+","+comp.y+") rotate("+(comp.rot||0)+")");
+        refreshWiresForComponent(comp.id);
+        markDirty();
+      }
+      function onUp(uv){
+        g.releasePointerCapture(uv.pointerId);
+        g.removeEventListener("pointermove", onMove);
+        g.removeEventListener("pointerup", onUp);
+        if (!dragState.moved && def.interactive){ def.onClick(comp); renderComponent(comp); selectComponent(comp.id); }
+        dragState = null;
+        markDirty();
+      }
+      g.addEventListener("pointermove", onMove);
+      g.addEventListener("pointerup", onUp);
+    });
+
+    g.addEventListener("contextmenu", function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      selectComponent(comp.id);
+      showContextMenu(ev.clientX, ev.clientY, [
+        { label:"Ruota 90°", action:function(){ comp.rot = ((comp.rot||0)+90)%360; renderComponent(comp); refreshWiresForComponent(comp.id); markDirty(); } },
+        { label:"Duplica", action:function(){ var c2=addComponent(comp.type, comp.x+40, comp.y+40, {params:comp.params, rot:comp.rot}); selectComponent(c2.id); } },
+        { label:"Elimina", danger:true, action:function(){ removeComponent(comp.id); } }
+      ]);
+    });
+  }
+
+  function refreshWiresForComponent(compId){
+    Object.keys(SC.state.wires).forEach(function(wid){
+      var w = SC.state.wires[wid];
+      if ((w.a.compId===compId) || (w.b.compId===compId)) renderWire(w);
+    });
+  }
+
+  /* ---------------- Disegno filo interattivo con snap ---------------- */
+
+  var SNAP_RADIUS = 22;
+
+  function findNearestTerminal(worldPos, excludeCompId, excludeTerm){
+    var best = null, bestD = SNAP_RADIUS;
+    allTerminalRefs().forEach(function(r){
+      if (excludeCompId && r.compId===excludeCompId && r.term===excludeTerm) return;
+      var d = dist(worldPos.x, worldPos.y, r.x, r.y);
+      if (d < bestD){ bestD = d; best = r; }
+    });
+    return best;
+  }
+
+  function startWireDraw(fromTerm, ev){
+    var previewPath = svgEl("path", { class:"sc-wire-preview" });
+    fxLayer.appendChild(previewPath);
+    var fromPos = endpointPos(fromTerm);
+
+    function onMove(mv){
+      var w = screenToWorld(mv.clientX, mv.clientY);
+      var near = findNearestTerminal(w, fromTerm.compId, fromTerm.term);
+      var target = near ? {x:near.x,y:near.y} : w;
+      previewPath.setAttribute("d", "M"+fromPos.x+" "+fromPos.y+" L"+target.x+" "+target.y);
+      highlightTerminal(near);
+    }
+    function onUp(uv){
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      previewPath.remove();
+      clearHighlight();
+      var w = screenToWorld(uv.clientX, uv.clientY);
+      var near = findNearestTerminal(w, fromTerm.compId, fromTerm.term);
+      if (near){
+        addWire(fromTerm, { compId: near.compId, term: near.term });
+        toast("Collegamento creato", "ok");
+      } else {
+        // crea giunzione libera nel punto (nodo intermedio) collegato con filo
+        var freeId = uid("free");
+        addWire(fromTerm, { freeId: freeId, x: snap(w.x), y: snap(w.y) });
+      }
+    }
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  }
+
+  var highlightedDot = null;
+  function highlightTerminal(ref){
+    clearHighlight();
+    if (!ref) return;
+    var g = $('[data-id="'+ref.compId+'"]', compLayer);
+    if (!g) return;
+    var dot = $('[data-term="'+ref.term+'"]', g);
+    if (dot){ dot.classList.add("sc-hover"); highlightedDot = dot; }
+  }
+  function clearHighlight(){ if (highlightedDot){ highlightedDot.classList.remove("sc-hover"); highlightedDot=null; } }
+
+  /* ---------------- Selezione & Inspector ---------------- */
+
+  function selectComponent(id){
+    SC.state.selection = id;
+    $all(".sc-comp", compLayer).forEach(function(g){
+      g.classList.toggle("sc-selected", g.getAttribute("data-id")===id);
+    });
+    renderInspector();
+  }
+
+  function renderInspector(){
+    var id = SC.state.selection;
+    if (!id || !SC.state.components[id]){
+      inspectorEl.innerHTML = '<div class="sc-inspector-empty">Seleziona un componente sullo stage per modificarne i parametri.</div>';
+      return;
+    }
+    var comp = SC.state.components[id];
+    var def = COMP_DEFS[comp.type];
+    inspectorEl.innerHTML = "";
+
+    var titleRow = document.createElement("div");
+    titleRow.className = "sc-row";
+    titleRow.innerHTML = '<strong style="font-size:13px">'+def.label+'</strong><span style="color:var(--sc-text-faint);font-family:var(--sc-font-mono);font-size:11px">'+comp.label+'</span>';
+    inspectorEl.appendChild(titleRow);
+
+    (def.paramDefs||[]).forEach(function(pd){
+      var field = document.createElement("div");
+      field.className = "sc-inspector-field";
+      if (pd.type === "bool"){
+        field.innerHTML = '<label class="sc-row" style="cursor:pointer"><span>'+pd.label+'</span><input type="checkbox" data-pkey="'+pd.key+'" '+(comp.params[pd.key]?"checked":"")+'><span class="sc-check"></span></label>';
+      } else {
+        field.innerHTML =
+          '<span class="sc-if-label">'+pd.label+'</span>' +
+          '<input type="number" class="sc-numinput" data-pkey="'+pd.key+'" value="'+comp.params[pd.key]+'" min="'+pd.min+'" max="'+pd.max+'" step="'+pd.step+'">';
+      }
+      inspectorEl.appendChild(field);
+    });
+
+    if (comp.type === "fuse" && comp.params.blown){
+      var resetBtn = document.createElement("button");
+      resetBtn.className = "sc-btn-outline";
+      resetBtn.textContent = "Sostituisci fusibile";
+      resetBtn.onclick = function(){ comp.params.blown = false; renderComponent(comp); refreshWiresForComponent(comp.id); markDirty(); };
+      inspectorEl.appendChild(resetBtn);
+    }
+
+    if (def.electrical && (def.electrical.kind==="voltmeter" || def.electrical.kind==="ammeter")){
+      var readout = document.createElement("div");
+      readout.className = "sc-row";
+      readout.style.marginTop = "6px";
+      readout.innerHTML = '<span>Lettura</span><strong data-role="inspector-reading" style="font-family:var(--sc-font-mono);color:var(--sc-accent)">—</strong>';
+      inspectorEl.appendChild(readout);
+    }
+
+    var delBtn = document.createElement("button");
+    delBtn.className = "sc-btn-danger";
+    delBtn.textContent = "Elimina componente";
+    delBtn.onclick = function(){ removeComponent(id); };
+    inspectorEl.appendChild(delBtn);
+
+    $all('input[data-pkey]', inspectorEl).forEach(function(inp){
+      inp.addEventListener("input", function(){
+        var key = inp.getAttribute("data-pkey");
+        if (inp.type === "checkbox"){ comp.params[key] = inp.checked; }
+        else { comp.params[key] = parseFloat(inp.value); }
+        renderComponent(comp);
+        refreshWiresForComponent(comp.id);
+        selectComponent(comp.id);
+        markDirty();
+      });
+    });
+  }
+
+  /* ---------------- Context menu generico ---------------- */
+
+  function showContextMenu(x, y, items){
+    var old = $(".sc-ctxmenu"); if (old) old.remove();
+    var menu = document.createElement("div");
+    menu.className = "sc-ctxmenu";
+    var rect = ROOT.getBoundingClientRect();
+    menu.style.left = (x - rect.left) + "px";
+    menu.style.top = (y - rect.top) + "px";
+    items.forEach(function(it){
+      var b = document.createElement("button");
+      b.textContent = it.label;
+      if (it.danger) b.className = "sc-danger-item";
+      b.onclick = function(){ it.action(); menu.remove(); };
+      menu.appendChild(b);
+    });
+    ROOT.appendChild(menu);
+    setTimeout(function(){
+      window.addEventListener("click", function closeOnce(){ menu.remove(); window.removeEventListener("click", closeOnce); });
+    },0);
+  }
+
+  /* ---------------- Drag & drop dalla toolbox ---------------- */
+
+  $all(".sc-tool", toolboxEl).forEach(function(toolEl){
+    toolEl.addEventListener("dragstart", function(ev){
+      ev.dataTransfer.setData("text/simulacr-component", toolEl.getAttribute("data-comp"));
+      ev.dataTransfer.effectAllowed = "copy";
+    });
+  });
+
+  stageWrap.addEventListener("dragover", function(ev){ ev.preventDefault(); });
+  stageWrap.addEventListener("drop", function(ev){
+    ev.preventDefault();
+    var type = ev.dataTransfer.getData("text/simulacr-component");
+    if (!type || !COMP_DEFS[type]) return;
+    var w = screenToWorld(ev.clientX, ev.clientY);
+    var comp = addComponent(type, w.x, w.y);
+    selectComponent(comp.id);
+    toast(COMP_DEFS[type].label + " aggiunto");
+  });
+
+  // Supporto touch: tocca lo strumento poi tocca lo stage per piazzare (fallback mobile)
+  var pendingPlacement = null;
+  $all(".sc-tool", toolboxEl).forEach(function(toolEl){
+    toolEl.addEventListener("touchstart", function(ev){
+      pendingPlacement = toolEl.getAttribute("data-comp");
+      toast("Tocca lo stage per posizionare: " + COMP_DEFS[pendingPlacement].label);
+    }, {passive:true});
+  });
+  stageWrap.addEventListener("pointerdown", function(ev){
+    if (pendingPlacement && ev.pointerType==="touch"){
+      var w = screenToWorld(ev.clientX, ev.clientY);
+      var comp = addComponent(pendingPlacement, w.x, w.y);
+      selectComponent(comp.id);
+      pendingPlacement = null;
+    }
+  });
+
+  /* ---------------- Pan & Zoom sullo stage ---------------- */
+
+  stageWrap.addEventListener("pointerdown", function(ev){
+    if (ev.target !== stageSvg && ev.target !== stageWrap) return;
+    selectComponent(null);
+    var v = SC.state.view;
+    var start = { x: ev.clientX, y: ev.clientY, vx: v.x, vy: v.y };
+    stageSvg.classList.add("sc-panning");
+    function onMove(mv){
+      v.x = start.vx + (mv.clientX - start.x);
+      v.y = start.vy + (mv.clientY - start.y);
+      applyViewTransform();
+    }
+    function onUp(){
+      stageSvg.classList.remove("sc-panning");
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    }
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  });
+
+  stageWrap.addEventListener("wheel", function(ev){
+    ev.preventDefault();
+    var v = SC.state.view;
+    var rect = stageSvg.getBoundingClientRect();
+    var mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+    var wx = (mx - v.x)/v.zoom, wy = (my - v.y)/v.zoom;
+    var factor = ev.deltaY < 0 ? 1.1 : 0.9;
+    v.zoom = clamp(v.zoom*factor, 0.35, 3);
+    v.x = mx - wx*v.zoom;
+    v.y = my - wy*v.zoom;
+    applyViewTransform();
+  }, { passive:false });
+
+  $('[data-action="zoom-in"]').addEventListener("click", function(){ zoomBy(1.2); });
+  $('[data-action="zoom-out"]').addEventListener("click", function(){ zoomBy(0.83); });
+  $('[data-action="zoom-reset"]').addEventListener("click", function(){ SC.state.view = {x:0,y:0,zoom:1}; applyViewTransform(); });
+  function zoomBy(f){
+    var v = SC.state.view;
+    var rect = stageSvg.getBoundingClientRect();
+    var mx = rect.width/2, my = rect.height/2;
+    var wx=(mx-v.x)/v.zoom, wy=(my-v.y)/v.zoom;
+    v.zoom = clamp(v.zoom*f, 0.35, 3);
+    v.x = mx-wx*v.zoom; v.y = my-wy*v.zoom;
+    applyViewTransform();
+  }
+
+  /* ---------------- Toolbar principale ---------------- */
+
+  function setTool(tool){
+    SC.state.tool = tool;
+    $all('[data-action^="tool-"]').forEach(function(b){ b.classList.remove("sc-active"); });
+    var map = { select:"tool-select", wire:"tool-wire", delete:"tool-delete" };
+    var btn = $('[data-action="'+map[tool]+'"]'); if (btn) btn.classList.add("sc-active");
+    stageWrap.style.cursor = tool==="wire" ? "crosshair" : (tool==="delete" ? "not-allowed" : "default");
+    hintEl.textContent = tool==="wire"
+      ? "Clicca un terminale e trascina fino a un altro per creare un collegamento."
+      : tool==="delete"
+      ? "Clicca su un componente o un filo per eliminarlo."
+      : "Trascina i componenti dalla barra a sinistra. Avvicina due terminali per collegarli automaticamente (snap).";
+  }
+  $('[data-action="tool-select"]').addEventListener("click", function(){ setTool("select"); });
+  $('[data-action="tool-wire"]').addEventListener("click", function(){ setTool("wire"); });
+  $('[data-action="tool-delete"]').addEventListener("click", function(){ setTool("delete"); });
+  setTool("select");
+
+  $('[data-action="run-toggle"]').addEventListener("click", function(){
+    SC.state.running = !SC.state.running;
+    var btn = $('[data-action="run-toggle"]');
+    $(".sc-icon-play", btn).classList.toggle("sc-hidden", SC.state.running);
+    $(".sc-icon-pause", btn).classList.toggle("sc-hidden", !SC.state.running);
+    $(".sc-run-label", btn).textContent = SC.state.running ? "Pausa" : "Avvia";
+  });
+
+  $('[data-role="speed-slider"]').addEventListener("input", function(e){
+    SC.state.speed = clamp(parseFloat(e.target.value)/100, 0, 2);
+  });
+
+  $('[data-action="clear-all"]').addEventListener("click", clearAllCircuit);
+  $('[data-action="clear-all-2"]').addEventListener("click", clearAllCircuit);
+  function clearAllCircuit(){
+    if (!confirm("Svuotare completamente il circuito?")) return;
+    SC.state.components = {}; SC.state.wires = {}; SC.state.selection = null;
+    compLayer.innerHTML = ""; wireLayer.innerHTML = "";
+    SC.state.nextCompNumber = {};
+    renderInspector();
+    toast("Circuito svuotato");
+  }
+
+  $('[data-action="export-json"]').addEventListener("click", function(){
+    var data = {
+      components: Object.keys(SC.state.components).map(function(id){
+        var c = SC.state.components[id];
+        return { id:c.id, type:c.type, x:c.x, y:c.y, rot:c.rot, label:c.label, params:c.params };
+      }),
+      wires: Object.keys(SC.state.wires).map(function(id){ return SC.state.wires[id]; })
+    };
+    var blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "circuito-simulacr.json";
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+    toast("Circuito esportato", "ok");
+  });
+
+  $('[data-action="import-json"]').addEventListener("click", function(){ fileInput.click(); });
+  fileInput.addEventListener("change", function(){
+    var file = fileInput.files[0]; if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      try {
+        var data = JSON.parse(reader.result);
+        clearAllCircuitSilent();
+        (data.components||[]).forEach(function(c){
+          SC.state.components[c.id] = { id:c.id, type:c.type, x:c.x, y:c.y, rot:c.rot||0, label:c.label, params:c.params };
+          renderComponent(SC.state.components[c.id]);
+        });
+        (data.wires||[]).forEach(function(w){ SC.state.wires[w.id] = w; renderWire(w); });
+        toast("Circuito importato", "ok");
+      } catch(e){
+        toast("File non valido", "err");
+      }
+    };
+    reader.readAsText(file);
+    fileInput.value = "";
+  });
+  function clearAllCircuitSilent(){
+    SC.state.components = {}; SC.state.wires = {}; SC.state.selection = null;
+    compLayer.innerHTML = ""; wireLayer.innerHTML = "";
+    renderInspector();
+  }
+
+  $('[data-action="toggle-fullscreen"]').addEventListener("click", function(){
+    if (!document.fullscreenElement){ ROOT.requestFullscreen && ROOT.requestFullscreen(); }
+    else { document.exitFullscreen && document.exitFullscreen(); }
+  });
+
+  $('[data-action="toggle-collapse"]').addEventListener("click", function(ev){
+    ev.currentTarget.closest(".sc-card").classList.toggle("sc-collapsed");
+  });
+
+  $('[data-action="autoroute-tidy"]').addEventListener("click", function(){
+    toast("Funzione in sviluppo: riordino automatico");
+  });
+
+  /* ---------------- Checkbox / radio pannello destro ---------------- */
+
+  function bindToggle(bindName, cb){
+    var el = ROOT.querySelector('[data-bind="'+bindName+'"]');
+    if (!el) return;
+    el.addEventListener("change", function(){ cb(el.checked); });
+  }
+  bindToggle("showCurrent", function(v){ SC.state.showCurrent = v; });
+  bindToggle("currentModeElectrons", function(v){ if (v) SC.state.currentMode = "electrons"; });
+  bindToggle("currentModeConventional", function(v){ if (v) SC.state.currentMode = "conventional"; });
+  bindToggle("showLabels", function(v){ SC.state.showLabels = v; rerenderAllComponents(); });
+  bindToggle("showValues", function(v){ SC.state.showValues = v; rerenderAllComponents(); });
+  bindToggle("showVoltageColor", function(v){ SC.state.showVoltageColor = v; });
+  bindToggle("scopeRunning", function(v){ SC.state.scopeRunning = v; });
+
+  function rerenderAllComponents(){
+    Object.keys(SC.state.components).forEach(function(id){ renderComponent(SC.state.components[id]); });
+    var sel = SC.state.selection;
+    if (sel) selectComponent(sel);
+  }
+  SC.state.scopeRunning = true;
+
+  $('[data-action="scope-clear"]').addEventListener("click", function(){ SC.state.scopeData = []; });
+
+  /* ---------------- Tastiera ---------------- */
+  /* ============================================================
+   *  LOOP DI SIMULAZIONE — chiama il solver, aggiorna la grafica
+   * ============================================================ */
+
+  var electronParticles = {}; // wireId/compId -> [{t, ...}]
+  var lastFrameTime = performance.now();
+
+  function stepSimulation(){
+    var now = performance.now();
+    var rawDt = (now - lastFrameTime) / 1000;
+    lastFrameTime = now;
+    var dt = clamp(rawDt, 0.001, 0.05) * SC.state.speed;
+
+    if (SC.state.running && Object.keys(SC.state.components).length){
+      SC.state.time += dt;
+      var result = solveCircuit(Math.max(dt, 1/240));
+      SC.state.solved = result;
+      applySolvedToVisuals(result, dt);
+      updateAnalysisPanel(result);
+      updateScope(result);
+    }
+    requestAnimationFrame(stepSimulation);
+  }
+
+  function applySolvedToVisuals(result, dt){
+    var comps = SC.state.components;
+    if (!result || !result.ok){
+      // nessun errore bloccante: continua a disegnare tutto spento
+    }
+    var I = (result && result.I) || {};
+    var Vc = (result && result.Vcomp) || {};
+
+    Object.keys(comps).forEach(function(id){
+      var comp = comps[id];
+      var def = COMP_DEFS[comp.type];
+      var el = def.electrical;
+      var g = $('[data-id="'+id+'"]', compLayer);
+      if (!g) return;
+
+      if (el && el.kind === "bulb"){
+        var current = Math.abs(I[id]||0);
+        var ratedI = Math.sqrt(comp.params.ratedPower / Math.max(comp.params.resistance,0.01));
+        var brightness = clamp(current / Math.max(ratedI,0.001), 0, 1.4);
+        var glow = $('[data-role="glow"]', g);
+        var fil = $('[data-role="filament"]', g);
+        if (glow){ glow.setAttribute("opacity", clamp(brightness*0.55,0,0.85)); glow.setAttribute("r", 19 + brightness*6); }
+        if (fil){ fil.setAttribute("stroke", brightness>0.05 ? "#fff2c9" : "#c9d2e0"); fil.setAttribute("stroke-width", 1.6+brightness*1.2); }
+      }
+      if (el && el.kind === "led"){
+        var currentL = Math.abs(I[id]||0);
+        var brightnessL = clamp(currentL / 0.02, 0, 1);
+        var glowL = $('[data-role="glow"]', g);
+        if (glowL) glowL.setAttribute("opacity", clamp(brightnessL*0.75,0,0.9));
+      }
+      if (el && el.kind === "fuse" && comp.params.blown){
+        var lastBlownFlag = g.getAttribute("data-blown-rendered");
+        if (lastBlownFlag !== "1"){ renderComponent(comp); g = $('[data-id="'+id+'"]', compLayer); g.setAttribute("data-blown-rendered","1"); toast(comp.label+" bruciato: corrente eccessiva!", "err"); }
+      }
+      if (el && el.kind === "voltmeter"){
+        var reading = $('[data-role="reading"]', g);
+        var vv = Vc[id]||0;
+        if (reading) reading.textContent = Math.abs(vv) < 1000 ? round2(vv)+"V" : fmtUnit(vv,"V");
+        if (SC.state.selection === id){
+          var insReading = $('[data-role="inspector-reading"]', inspectorEl);
+          if (insReading) insReading.textContent = fmtUnit(vv,"V");
+        }
+      }
+      if (el && el.kind === "ammeter"){
+        var readingA = $('[data-role="reading"]', g);
+        var ia = I[id]||0;
+        if (readingA) readingA.textContent = fmtUnit(ia,"A");
+        if (SC.state.selection === id){
+          var insReadingA = $('[data-role="inspector-reading"]', inspectorEl);
+          if (insReadingA) insReadingA.textContent = fmtUnit(ia,"A");
+        }
+      }
+      if (comp.type === "motor"){
+        var rotorG = g.querySelector('[data-role="rotor"]');
+        if (rotorG){
+          var spinSpeed = (I[id]||0) * 400;
+          comp._rotorAngle = (comp._rotorAngle||0) + spinSpeed*dt;
+          rotorG.setAttribute("transform", "rotate("+comp._rotorAngle+")");
+        }
+      }
+    });
+
+    if (SC.state.showCurrent) animateCurrentParticles(I, dt);
+    else clearParticles();
+  }
+
+  /* -------------------- Animazione corrente (elettroni / convenzionale) -------------------- */
+
+  function clearParticles(){
+    $all(".sc-electron, .sc-conv-arrow", fxLayer).forEach(function(n){ n.remove(); });
+    electronParticles = {};
+  }
+
+  function animateCurrentParticles(I, dt){
+    // per ogni wire con corrente apprezzabile disegniamo particelle in movimento lungo il segmento
+    $all(".sc-electron, .sc-conv-arrow", fxLayer).forEach(function(n){ n.remove(); });
+
+    var segments = [];
+    Object.keys(SC.state.wires).forEach(function(wid){
+      var w = SC.state.wires[wid];
+      var pa = endpointPos(w.a), pb = endpointPos(w.b);
+      var current = estimateWireCurrent(w);
+      segments.push({ pa:pa, pb:pb, current: current });
+    });
+    Object.keys(SC.state.components).forEach(function(id){
+      var comp = SC.state.components[id];
+      var def = COMP_DEFS[comp.type];
+      if (!def.isWireLike) return;
+      var pa = worldTerminalPos(comp,"a"), pb = worldTerminalPos(comp,"b");
+      segments.push({ pa:pa, pb:pb, current: (I&&I[id])||0 });
+    });
+
+    segments.forEach(function(seg, idx){
+      var mag = Math.abs(seg.current);
+      if (mag < 1e-5) return;
+      var len = dist(seg.pa.x,seg.pa.y,seg.pb.x,seg.pb.y);
+      if (len < 1) return;
+      var dirSign = seg.current >= 0 ? 1 : -1;
+      var speed = clamp(mag * 40, 8, 260) * dirSign; // px/s lungo il filo, proporzionale a I
+      var key = "seg"+idx;
+      if (!electronParticles[key]) electronParticles[key] = { offset: Math.random()*40 };
+      var state = electronParticles[key];
+      state.offset += speed*dt;
+      var spacing = 26;
+      var count = Math.max(1, Math.floor(len/spacing));
+      for (var i=0;i<count;i++){
+        var t = (( (i*spacing + state.offset) % len ) + len) % len / len;
+        var px = seg.pa.x + (seg.pb.x-seg.pa.x)*t;
+        var py = seg.pa.y + (seg.pb.y-seg.pa.y)*t;
+        if (SC.state.currentMode === "electrons"){
+          var dot = svgEl("circle", { class:"sc-electron", cx:px, cy:py, r:3 });
+          fxLayer.appendChild(dot);
+        } else {
+          var angle = Math.atan2(seg.pb.y-seg.pa.y, seg.pb.x-seg.pa.x) * 180/Math.PI * (seg.current>=0?1:1);
+          var ang2 = seg.current>=0 ? angle : angle+180;
+          var arrow = svgEl("polygon", {
+            class:"sc-conv-arrow",
+            points: "6,0 -4,-4 -4,4",
+            transform: "translate("+px+","+py+") rotate("+ang2+")"
+          });
+          fxLayer.appendChild(arrow);
+        }
+      }
+    });
+  }
+
+  function estimateWireCurrent(w){
+    // per un filo che collega due terminali di componenti reali, la corrente è quella del componente collegato
+    // se collega due giunzioni libere (nodo passante), sommiamo le correnti entranti nel nodo per stimare il flusso
+    var I = (SC.state.solved && SC.state.solved.I) || {};
+    if (w.a.compId){
+      var val = I[w.a.compId];
+      if (val != null) return val;
+    }
+    if (w.b.compId){
+      var val2 = I[w.b.compId];
+      if (val2 != null) return -val2;
+    }
+    return 0;
+  }
+
+  /* -------------------- Pannello analisi -------------------- */
+
+  function updateAnalysisPanel(result){
+    if (!result || !result.ok){
+      analysisEl.textContent = Object.keys(SC.state.components).length ? "Circuito non risolvibile (verifica i collegamenti)." : "Nessun circuito attivo.";
+      return;
+    }
+    var comps = SC.state.components;
+    var ids = Object.keys(comps);
+    if (!ids.length){ analysisEl.textContent = "Nessun circuito attivo."; return; }
+
+    var totalPower = 0;
+    var lines = [];
+    ids.forEach(function(id){
+      var comp = comps[id];
+      var el = COMP_DEFS[comp.type].electrical;
+      if (!el) return;
+      var v = result.Vcomp[id]||0;
+      var i = result.I[id]||0;
+      var p = Math.abs(v*i);
+      if (["resistor","bulb","fuse","switch"].indexOf(el.kind) > -1 || COMP_DEFS[comp.type].electrical.dynamicResistance){
+        totalPower += p;
+      }
+    });
+
+    var srcCount = ids.filter(function(id){ var k=COMP_DEFS[comps[id].type].electrical; return k && (k.kind==="vsource"||k.kind==="vsourceAC"); }).length;
+
+    lines.push("Componenti: " + ids.length);
+    lines.push("Sorgenti attive: " + srcCount);
+    lines.push("Potenza dissipata stimata: " + fmtUnit(totalPower, "W"));
+    if (!result.converged) lines.push("⚠ Convergenza non raggiunta: circuito instabile o cortocircuito.");
+    analysisEl.innerHTML = lines.map(function(l){ return '<div>'+l+'</div>'; }).join("");
+  }
+
+  /* -------------------- Oscilloscopio -------------------- */
+
+  var SCOPE_COLORS = ["#4fd1c5", "#ffb454", "#ff6b6b", "#7fffb0", "#c890ff"];
+  var scopeHistory = []; // {t, values:[...]}
+  var SCOPE_WINDOW = 6; // secondi visibili
+
+  function collectScopeChannels(){
+    var channels = [];
+    Object.keys(SC.state.components).forEach(function(id){
+      var comp = SC.state.components[id];
+      var el = COMP_DEFS[comp.type].electrical;
+      if (el && (el.kind === "voltmeter")){
+        channels.push({ id:id, label: comp.label+" (V)", get: function(res){ return (res.Vcomp && res.Vcomp[id]) || 0; } });
+      }
+      if (el && (el.kind === "ammeter")){
+        channels.push({ id:id, label: comp.label+" (A)", get: function(res){ return (res.I && res.I[id]) || 0; } });
+      }
+    });
+    return channels;
+  }
+
+  function updateScope(result){
+    if (!SC.state.scopeRunning) return;
+    var channels = collectScopeChannels();
+    if (!result || !result.ok){ return; }
+    var values = channels.map(function(ch){ return ch.get(result); });
+    scopeHistory.push({ t: SC.state.time, values: values, channels: channels.map(function(c){return c.label;}) });
+    while (scopeHistory.length && (SC.state.time - scopeHistory[0].t) > SCOPE_WINDOW){ scopeHistory.shift(); }
+    drawScope(channels);
+  }
+
+  function drawScope(channels){
+    if (!scopeCtx) return;
+    var W = scopeCanvas.width, H = scopeCanvas.height;
+    scopeCtx.clearRect(0,0,W,H);
+    scopeCtx.strokeStyle = "#1c2536";
+    scopeCtx.lineWidth = 1;
+    for (var gy=0; gy<=4; gy++){
+      var y = (H/4)*gy;
+      scopeCtx.beginPath(); scopeCtx.moveTo(0,y); scopeCtx.lineTo(W,y); scopeCtx.stroke();
+    }
+    scopeCtx.strokeStyle = "#26314788";
+    scopeCtx.beginPath(); scopeCtx.moveTo(0,H/2); scopeCtx.lineTo(W,H/2); scopeCtx.stroke();
+
+    scopeLegend.innerHTML = "";
+    if (!channels.length || scopeHistory.length < 2){
+      scopeCtx.fillStyle = "#5c6b83";
+      scopeCtx.font = "11px monospace";
+      scopeCtx.fillText("Aggiungi un Voltmetro o Amperometro per vedere il grafico", 10, H/2);
+      return;
+    }
+
+    // scala automatica in base al massimo assoluto osservato
+    var maxAbs = 1e-6;
+    scopeHistory.forEach(function(pt){ pt.values.forEach(function(v){ maxAbs = Math.max(maxAbs, Math.abs(v)); }); });
+    maxAbs *= 1.15;
+
+    var tNow = SC.state.time;
+    channels.forEach(function(ch, ci){
+      var color = SCOPE_COLORS[ci % SCOPE_COLORS.length];
+      scopeCtx.strokeStyle = color;
+      scopeCtx.lineWidth = 1.6;
+      scopeCtx.beginPath();
+      var started = false;
+      scopeHistory.forEach(function(pt){
+        var val = pt.values[ci];
+        if (val==null) return;
+        var x = W * (1 - (tNow - pt.t)/SCOPE_WINDOW);
+        var y = H/2 - (val/maxAbs) * (H/2 - 6);
+        if (!started){ scopeCtx.moveTo(x,y); started=true; } else { scopeCtx.lineTo(x,y); }
+      });
+      scopeCtx.stroke();
+
+      var item = document.createElement("div");
+      item.className = "sc-scope-legend-item";
+      item.innerHTML = '<span class="sc-scope-swatch" style="background:'+color+'"></span>' + ch.label;
+      scopeLegend.appendChild(item);
+    });
+  }
+
+  /* ---------------- Tastiera ---------------- */
+  window.addEventListener("keydown", function(ev){
+    var tag = (document.activeElement && document.activeElement.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+    if (ev.key === "v" || ev.key === "V") setTool("select");
+    if (ev.key === "f" || ev.key === "F") setTool("wire");
+    if (ev.key === "Delete" || ev.key === "Backspace"){
+      if (SC.state.selection){ removeComponent(SC.state.selection); ev.preventDefault(); }
+    }
+    if (ev.key === "Escape"){ selectComponent(null); setTool("select"); }
+    if (ev.key === " "){ $('[data-action="run-toggle"]').click(); ev.preventDefault(); }
+  });
+
+  /* ============================================================
+   *  AVVIO
+   * ============================================================ */
+
+  function bootstrapDemoCircuit(){
+    // Circuito dimostrativo iniziale: batteria + interruttore + resistore + lampadina in serie
+    var bx=120, by=140;
+    var bat = addComponent("battery", bx, by, {params:{voltage:9, rint:0.5}});
+    var sw  = addComponent("switch", bx+140, by, {});
+    var res = addComponent("resistor", bx+280, by, {params:{resistance:220}});
+    var bulb= addComponent("bulb", bx+140, by+120, {params:{resistance:24, ratedPower:3}});
+
+    addWire({compId:bat.id, term:"pos"}, {compId:sw.id, term:"a"});
+    addWire({compId:sw.id, term:"b"}, {compId:res.id, term:"a"});
+    addWire({compId:res.id, term:"b"}, {freeId:"j1", x:bx+280, y:by+120});
+    addWire({freeId:"j1", x:bx+280, y:by+120}, {compId:bulb.id, term:"b"});
+    addWire({compId:bulb.id, term:"a"}, {compId:bat.id, term:"neg"});
+    selectComponent(null);
+  }
+
+  bootstrapDemoCircuit();
+  requestAnimationFrame(stepSimulation);
+
+})();
+</script>
+</div>
+<!-- Separator -->
+</html>
