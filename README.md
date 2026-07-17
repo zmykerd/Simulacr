@@ -89,15 +89,15 @@ git clone https://github.com/zmykerd/Simulacr
 cd simulacr
 ```
 
+
+```md
 Aprire semplicemente `simulacr.html` nel browser.
+```
 
 ## Screenshot
 
-
-```md
 <img width="1877" height="889" alt="Schermata_20260717_180523 (1)" src="https://github.com/user-attachments/assets/855f741c-6b57-4977-bb14-efadb4e6f9ac" />
 
-```
 
 ## Roadmap
 
