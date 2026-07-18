@@ -608,12 +608,13 @@ body::before{
 
   @media (max-width: 720px) {
     #Simulacr .sc-mobile-only { display: flex; }
-    #Simulacr .sc-hide-narrow { display: none !important; }
     #Simulacr .sc-tb-label { display: none; }
-    #Simulacr .sc-tb-speed { display: none; }
     #Simulacr .sc-topbar { padding: 6px 8px; gap: 6px; }
-    #Simulacr .sc-tb-btn { padding: 9px; min-width: 40px; justify-content: center; }
+    #Simulacr .sc-tb-btn { padding: 9px; min-width: 40px; justify-content: center; flex-shrink: 0; }
     #Simulacr .sc-tb-btn svg { width: 18px; height: 18px; }
+    #Simulacr .sc-tb-speed { flex-shrink: 0; gap: 4px; font-size: 11px; }
+    #Simulacr .sc-tb-speed input[type="range"] { width: 54px; }
+    #Simulacr .sc-tb-spacer { flex: 0 0 8px; }
 
     #Simulacr .sc-toolbox {
       position: absolute;
