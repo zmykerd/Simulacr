@@ -145,6 +145,24 @@
   #Simulacr .sc-tool:hover { background: var(--sc-panel-2); border-color: var(--sc-border); }
   #Simulacr .sc-tool.sc-tool-armed { background: var(--sc-accent); border-color: var(--sc-accent); }
   #Simulacr .sc-tool.sc-tool-armed span { color: var(--sc-bg); }
+  #Simulacr .sc-touch-drag-preview {
+    position: absolute;
+    z-index: 40;
+    pointer-events: none;
+    transform: translate(-50%,-50%) scale(1.15);
+    opacity: 0.55;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+    transition: opacity .1s;
+  }
+  #Simulacr .sc-touch-drag-preview svg { width: 60px; height: 40px; }
+  #Simulacr .sc-touch-drag-preview.sc-touch-drag-valid { opacity: 0.95; }
+  #Simulacr .sc-touch-drag-preview.sc-touch-drag-valid::after {
+    content: "";
+    position: absolute;
+    inset: -10px;
+    border: 2px dashed var(--sc-accent);
+    border-radius: 10px;
+  }
   #Simulacr .sc-tool:active { cursor: grabbing; }
   #Simulacr .sc-tool svg { width: 52px; height: 34px; pointer-events: none; }
   #Simulacr .sc-tool span {
@@ -242,7 +260,7 @@
     stroke-width: 1.5;
   }
   #Simulacr .sc-node-dot.sc-node-hot { fill: var(--sc-wire-hot); }
-  #Simulacr .sc-node-dot.sc-hover { fill: var(--sc-accent); r: 6; cursor: crosshair; }
+  #Simulacr .sc-node-dot.sc-hover { fill: var(--sc-accent); r: 9; cursor: crosshair; filter: drop-shadow(0 0 4px var(--sc-accent)); }
 
   #Simulacr .sc-wire-path {
     fill: none;
@@ -254,7 +272,7 @@
   #Simulacr .sc-wire-path.sc-broken { stroke: var(--sc-danger); stroke-dasharray: 4 4; }
   #Simulacr .sc-wire-path:hover { stroke: var(--sc-text); }
   #Simulacr .sc-wire-hit { fill: none; stroke: transparent; stroke-width: 16; cursor: pointer; }
-  #Simulacr .sc-wire-preview { fill: none; stroke: var(--sc-accent); stroke-width: 3; stroke-dasharray: 6 5; opacity: .85; }
+  #Simulacr .sc-wire-preview { fill: none; stroke: var(--sc-accent); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 8 6; opacity: .9; }
 
   #Simulacr .sc-electron {
     fill: #6fd8ff;
@@ -541,13 +559,20 @@
     #Simulacr .sc-toolbox {
       position: absolute;
       left: 0; top: 0; bottom: 0;
-      width: 220px;
+      width: 240px;
       z-index: 9;
       transform: translateX(-100%);
       transition: transform .22s ease;
       box-shadow: 4px 0 18px rgba(0,0,0,0.35);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      align-content: start;
+      padding: 10px 8px 20px;
     }
     #Simulacr .sc-toolbox.sc-drawer-open { transform: translateX(0); }
+    #Simulacr .sc-toolbox .sc-tool-group-title { grid-column: 1 / -1; margin: 8px 2px 2px; }
+    #Simulacr .sc-toolbox .sc-tool-group-title:first-child { margin-top: 0; }
 
     #Simulacr .sc-sidepanel {
       position: absolute;
@@ -561,8 +586,13 @@
     #Simulacr .sc-sidepanel.sc-drawer-open { transform: translateX(0); }
 
     /* Target touch più grandi ovunque nell'interfaccia */
-    #Simulacr .sc-tool { padding: 10px 6px; }
-    #Simulacr .sc-tool svg { width: 46px; height: 32px; }
+    #Simulacr .sc-tool {
+      padding: 10px 4px;
+      border: 1px solid var(--sc-border);
+      border-radius: 8px;
+    }
+    #Simulacr .sc-tool svg { width: 44px; height: 30px; }
+    #Simulacr .sc-tool span { font-size: 10px; }
     #Simulacr .sc-check, #Simulacr .sc-radio { width: 19px; height: 19px; }
     #Simulacr .sc-row { padding: 7px 0; }
     #Simulacr .sc-vc-btn { width: 42px; height: 42px; }
@@ -571,7 +601,7 @@
 
   @media (max-width: 480px) {
     #Simulacr { height: 100vh; min-height: 480px; border-radius: 0; }
-    #Simulacr .sc-toolbox { width: 190px; }
+    #Simulacr .sc-toolbox { width: 78vw; max-width: 260px; }
     #Simulacr .sc-sidepanel { width: 92vw; max-width: 320px; }
     #Simulacr .sc-hint { max-width: 220px; font-size: 10.5px; left: 8px; bottom: 8px; }
     #Simulacr .sc-viewport-controls { right: 8px; bottom: 8px; }
@@ -782,7 +812,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
         </button>
       </div>
-      <div class="sc-hint" data-role="hint">Trascina i componenti dalla barra a sinistra. Avvicina due terminali per collegarli automaticamente (snap).</div>
+      <div class="sc-hint" data-role="hint">Trascina i componenti dalla barra a sinistra. Avvicina due terminali per collegarli automaticamente (snap), oppure tocca un terminale per collegarlo direttamente su schermi touch.</div>
       <div class="sc-toast" data-role="toast"></div>
     </div>
 
@@ -827,7 +857,6 @@
 
       <div class="sc-card">
         <div class="sc-card-title">Circuito</div>
-        <button class="sc-btn-outline" data-action="autoroute-tidy">Ordina cavi (beta)</button>
         <button class="sc-btn-danger" data-action="clear-all-2">Svuota tutto</button>
       </div>
     </div>
@@ -1977,7 +2006,13 @@
     g.addEventListener("pointerdown", function(ev){
       if (ev.button !== 0) return;
       var targetTerm = ev.target.getAttribute && ev.target.getAttribute("data-term");
-      if (SC.state.tool === "wire"){
+      var isOnTerminalHit = ev.target.getAttribute && ev.target.getAttribute("data-term-hit") === "1";
+      // Su touch, toccare precisamente un terminale avvia sempre un collegamento, anche in
+      // modalità "Seleziona" — evita di dover passare manualmente al tool Filo, il passo
+      // che rendeva il collegamento scomodo. Il tocco sul CORPO del componente continua a
+      // trascinarlo normalmente: la distinzione è netta (l'area del terminale è dedicata).
+      var touchWireShortcut = ev.pointerType === "touch" && isOnTerminalHit && SC.state.tool !== "delete";
+      if (SC.state.tool === "wire" || touchWireShortcut){
         ev.stopPropagation();
         startWireDraw({ compId: comp.id, term: targetTerm || def.terminals[0].name }, ev);
         return;
@@ -2111,9 +2146,11 @@
     var previewPath = svgEl("path", { class:"sc-wire-preview" });
     fxLayer.appendChild(previewPath);
     var fromPos = endpointPos(fromTerm);
+    var isTouch = ev.pointerType === "touch";
+    var touchLift = isTouch ? 34 : 0; // solleva il punto mirato sopra il dito, per vederlo
 
     function onMove(mv){
-      var w = screenToWorld(mv.clientX, mv.clientY);
+      var w = screenToWorld(mv.clientX, mv.clientY - touchLift);
       var near = findNearestTerminal(w, fromTerm.compId, fromTerm.term);
       var target = near ? {x:near.x,y:near.y} : w;
       previewPath.setAttribute("d", "M"+fromPos.x+" "+fromPos.y+" L"+target.x+" "+target.y);
@@ -2125,7 +2162,7 @@
       window.removeEventListener("pointercancel", onCancel);
       previewPath.remove();
       clearHighlight();
-      var w = screenToWorld(uv.clientX, uv.clientY);
+      var w = screenToWorld(uv.clientX, uv.clientY - touchLift);
       var near = findNearestTerminal(w, fromTerm.compId, fromTerm.term);
       if (near){
         addWire(fromTerm, { compId: near.compId, term: near.term });
@@ -2290,37 +2327,87 @@
     toast(COMP_DEFS[type].label + " aggiunto");
   });
 
-  // Supporto touch: tocca lo strumento (chiude il drawer per rivelare lo stage) poi tocca lo stage per piazzare
-  var pendingPlacement = null;
-  var pendingPlacementEl = null;
+  // Supporto touch: drag continuo in un solo gesto, dallo strumento allo stage.
+  // Tocchi uno strumento e, senza sollevare il dito, trascini fino al punto desiderato
+  // sullo stage; un'anteprima semitrasparente segue il dito durante il trascinamento.
+  // Se sollevi il dito fuori dallo stage (es. ancora sulla toolbox), il piazzamento si annulla.
+  var touchDragPreview = null;
+  var touchDragType = null;
+  var touchDragStarted = false;
+
+  function createTouchDragPreview(type){
+    var def = COMP_DEFS[type];
+    var wrap = document.createElement("div");
+    wrap.className = "sc-touch-drag-preview";
+    var svgHtml = $('.sc-tool[data-comp="'+type+'"] svg', toolboxEl);
+    if (svgHtml) wrap.appendChild(svgHtml.cloneNode(true));
+    ROOT.appendChild(wrap);
+    return wrap;
+  }
+
   $all(".sc-tool", toolboxEl).forEach(function(toolEl){
     toolEl.addEventListener("touchstart", function(ev){
       var type = toolEl.getAttribute("data-comp");
-      if (pendingPlacement === type){
-        // secondo tocco sullo stesso strumento: annulla il piazzamento
-        pendingPlacement = null;
-        if (pendingPlacementEl) pendingPlacementEl.classList.remove("sc-tool-armed");
-        pendingPlacementEl = null;
-        return;
-      }
-      if (pendingPlacementEl) pendingPlacementEl.classList.remove("sc-tool-armed");
-      pendingPlacement = type;
-      pendingPlacementEl = toolEl;
+      touchDragType = type;
+      touchDragStarted = false;
       toolEl.classList.add("sc-tool-armed");
-      toast("Tocca lo stage per posizionare: " + COMP_DEFS[pendingPlacement].label);
-      closeDrawers();
+    }, {passive:true});
+
+    toolEl.addEventListener("touchmove", function(ev){
+      if (!touchDragType) return;
+      ev.preventDefault();
+      var t = ev.touches[0];
+      if (!touchDragStarted){
+        touchDragStarted = true;
+        closeDrawers();
+        touchDragPreview = createTouchDragPreview(touchDragType);
+      }
+      if (touchDragPreview){
+        var rect = ROOT.getBoundingClientRect();
+        touchDragPreview.style.left = (t.clientX - rect.left) + "px";
+        touchDragPreview.style.top = (t.clientY - rect.top) + "px";
+        var overStage = isPointOverStage(t.clientX, t.clientY);
+        touchDragPreview.classList.toggle("sc-touch-drag-valid", overStage);
+      }
+    }, {passive:false});
+
+    toolEl.addEventListener("touchend", function(ev){
+      toolEl.classList.remove("sc-tool-armed");
+      if (touchDragPreview) { touchDragPreview.remove(); touchDragPreview = null; }
+      if (touchDragType && touchDragStarted){
+        var t = ev.changedTouches[0];
+        if (isPointOverStage(t.clientX, t.clientY)){
+          var w = screenToWorld(t.clientX, t.clientY);
+          var comp = addComponent(touchDragType, w.x, w.y);
+          selectComponent(comp.id);
+          toast(COMP_DEFS[touchDragType].label + " aggiunto");
+        }
+      } else if (touchDragType && !touchDragStarted){
+        // Tocco singolo senza trascinamento: piazza al centro dello stage visibile, comodo
+        // per chi preferisce due tocchi rapidi invece del drag.
+        var rect = stageWrap.getBoundingClientRect();
+        var w2 = screenToWorld(rect.left + rect.width/2, rect.top + rect.height/2);
+        closeDrawers();
+        var comp2 = addComponent(touchDragType, w2.x, w2.y);
+        selectComponent(comp2.id);
+        toast(COMP_DEFS[touchDragType].label + " aggiunto al centro");
+      }
+      touchDragType = null;
+      touchDragStarted = false;
+    }, {passive:true});
+
+    toolEl.addEventListener("touchcancel", function(){
+      toolEl.classList.remove("sc-tool-armed");
+      if (touchDragPreview) { touchDragPreview.remove(); touchDragPreview = null; }
+      touchDragType = null;
+      touchDragStarted = false;
     }, {passive:true});
   });
-  stageWrap.addEventListener("pointerdown", function(ev){
-    if (pendingPlacement && ev.pointerType==="touch"){
-      var w = screenToWorld(ev.clientX, ev.clientY);
-      var comp = addComponent(pendingPlacement, w.x, w.y);
-      selectComponent(comp.id);
-      if (pendingPlacementEl) pendingPlacementEl.classList.remove("sc-tool-armed");
-      pendingPlacement = null;
-      pendingPlacementEl = null;
-    }
-  });
+
+  function isPointOverStage(clientX, clientY){
+    var rect = stageWrap.getBoundingClientRect();
+    return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+  }
 
   /* ---------------- Pan & Zoom sullo stage ---------------- */
 
@@ -2426,10 +2513,12 @@
     var btn = $('[data-action="'+map[tool]+'"]'); if (btn) btn.classList.add("sc-active");
     stageWrap.style.cursor = tool==="wire" ? "crosshair" : (tool==="delete" ? "not-allowed" : "default");
     hintEl.textContent = tool==="wire"
-      ? "Clicca un terminale e trascina fino a un altro per creare un collegamento."
+      ? "Tocca un terminale e trascina fino a un altro per creare un collegamento."
       : tool==="delete"
-      ? "Clicca su un componente o un filo per eliminarlo."
-      : "Trascina i componenti dalla barra a sinistra. Avvicina due terminali per collegarli automaticamente (snap).";
+      ? "Tocca un componente o un filo per eliminarlo."
+      : (isTouchDevice()
+          ? "Trascina i componenti dalla barra a sinistra sullo stage. Tocca un terminale per collegarlo direttamente."
+          : "Trascina i componenti dalla barra a sinistra. Avvicina due terminali per collegarli automaticamente (snap).");
   }
   $('[data-action="tool-select"]').addEventListener("click", function(){ setTool("select"); });
   $('[data-action="tool-wire"]').addEventListener("click", function(){ setTool("wire"); });
@@ -2538,10 +2627,6 @@
 
   $('[data-action="toggle-collapse"]').addEventListener("click", function(ev){
     ev.currentTarget.closest(".sc-card").classList.toggle("sc-collapsed");
-  });
-
-  $('[data-action="autoroute-tidy"]').addEventListener("click", function(){
-    toast("Funzione in sviluppo: riordino automatico");
   });
 
   /* ---------------- Checkbox / radio pannello destro ---------------- */
