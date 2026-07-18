@@ -69,6 +69,8 @@ body::before{
 
 /* Separator */
 
+
+
   #Simulacr, #Simulacr * { box-sizing: border-box; }
   #Simulacr {
     --sc-bg: #0f1520;
@@ -303,7 +305,6 @@ body::before{
   /* ---------- Components on stage ---------- */
   #Simulacr .sc-comp {
     position: absolute;
-    transform-origin: center;
     cursor: grab;
     touch-action: none;
     -webkit-touch-callout: none;
@@ -2367,13 +2368,38 @@ body::before{
       var b = document.createElement("button");
       b.textContent = it.label;
       if (it.danger) b.className = "sc-danger-item";
-      b.onclick = function(){ it.action(); menu.remove(); };
+      // pointerup invece di click: su touch il "click" è un evento sintetico generato dal
+      // browser con tempistiche variabili (spesso 0-300ms dopo il touchend reale), che può
+      // arrivare mescolato con altri eventi della sequenza long-press che ha aperto questo
+      // stesso menu. pointerup è l'evento reale e immediato, niente ambiguità di timing.
+      b.addEventListener("pointerup", function(ev){
+        ev.stopPropagation();
+        ev.preventDefault();
+        it.action();
+        closeMenu();
+      });
       menu.appendChild(b);
     });
+    // Blocca qualunque evento pointer sul corpo del menu dal propagarsi allo stage
+    // sottostante: senza questo, un tocco impreciso vicino al bordo di un bottone
+    // potrebbe "passare attraverso" e avviare un pan/drag sullo stage nello stesso gesto.
+    menu.addEventListener("pointerdown", function(ev){ ev.stopPropagation(); });
+    menu.addEventListener("pointerup", function(ev){ ev.stopPropagation(); });
     ROOT.appendChild(menu);
-    setTimeout(function(){
-      window.addEventListener("click", function closeOnce(){ menu.remove(); window.removeEventListener("click", closeOnce); });
-    },0);
+
+    function closeMenu(){
+      menu.remove();
+      window.removeEventListener("pointerdown", onOutsidePointerDown, true);
+    }
+    // Chiusura al tocco/click FUORI dal menu: ascoltiamo pointerdown in fase di cattura,
+    // e ignoriamo esplicitamente il primo evento (quello, se presente, generato dallo
+    // stesso gesto che ha aperto il menu) rimandando l'attivazione al prossimo frame.
+    function onOutsidePointerDown(ev){
+      if (!menu.contains(ev.target)){ closeMenu(); }
+    }
+    requestAnimationFrame(function(){
+      window.addEventListener("pointerdown", onOutsidePointerDown, true);
+    });
   }
 
   /* ---------------- Drag & drop dalla toolbox ---------------- */
@@ -3058,5 +3084,7 @@ body::before{
 })();
 </script>
 </div>
+
+
 </body>
 </html>
