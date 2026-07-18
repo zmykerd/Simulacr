@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html lang="it">
-<link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAACJklEQVR42s2UXUsUYRTHh94IvCmIrqIuiiC6ivoAfYRoZ1mIiiDoorsIijKDkAIhgiLD3ulOArFuguhlCwVlXVncXZVdmX1hV1113kdEXde/54zrMLvrqugs+MAPnjlzzu8888w8I2w2AOzRdVzQDFxXTNxleM4xvidsd2gaTqgWXqkmZAJ1mFEsvOTcLYsB7NUstFDxIoEtskg1j7h2Q3mhgCbFwO/1JOmZBUTzszYZmq+Xoxn4xY56Kz9ASf8IjCTy+N87CNlYRnBMRkefhM5IDj9Gphh7/rZfQjCpcE51oyC7avfcxPO1pII8j8dPnqG5/Qv+UoNpvUZix/4kZXwIpZBXitX32yrkuo7zFCwRYKb0Eq16DC/efMTr9vdQnFXWMjo5h3f9Ka5xx0uahnNOAwp8cxd1RccRzpr2vPv7T7Q+beOnqttkIGugOzpREVNMdNly08QR9+pzchGfQ5mKZH4fDx62IJPT6jb5FEpXb1XJsnBUUCz46EJdo1dSZxmeuwlHEsa9+83FhFTQ+bqanhTVEe4Yu4VdNRC+tR/RK4dtIpcOed8g7utEXESZr97KY/6bLvkSYoEzHsoDJ0lqOg1iYod38uDFfbT6Pkc+LM5h6PIxD/ddbCXgokioZeKI+49vXz7sO0uSJCGVyboa5TEaOO3xVyTeLssn+SV7K0/fOEji3Cr+U404A3caJx+61kTyAe/lzjnwXeWzIDRq7OS/swLjekMpzQnA1gAAAABJRU5ErkJggg==" />
-<head>
-<meta charset="utf-8">
-<title>Simulatore elettronica</title>
-</head>
-<!-- Separator -->
 <div id="Simulacr">
 <style type="text/css">
   #Simulacr, #Simulacr * { box-sizing: border-box; }
@@ -96,11 +88,16 @@
     border-bottom: 1px solid var(--sc-border);
     flex: 0 0 auto;
     z-index: 5;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
   }
+  #Simulacr .sc-topbar::-webkit-scrollbar { height: 0; }
   #Simulacr .sc-brand {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
     font-weight: 700;
     font-size: 14px;
     letter-spacing: 0.02em;
@@ -117,6 +114,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-shrink: 0;
     background: var(--sc-panel-2);
     border: 1px solid var(--sc-border);
     color: var(--sc-text-dim);
@@ -129,7 +127,7 @@
   #Simulacr .sc-tb-btn:hover { color: var(--sc-text); border-color: var(--sc-text-faint); background: #202b3f; }
   #Simulacr .sc-tb-btn.sc-active { color: var(--sc-bg); background: var(--sc-accent); border-color: var(--sc-accent); }
   #Simulacr .sc-tb-btn svg { width: 15px; height: 15px; flex: 0 0 auto; }
-  #Simulacr .sc-tb-sep { width: 1px; align-self: stretch; background: var(--sc-border); margin: 0 2px; }
+  #Simulacr .sc-tb-sep { width: 1px; flex-shrink:0; align-self: stretch; background: var(--sc-border); margin: 0 2px; }
   #Simulacr .sc-tb-spacer { flex: 1 1 auto; }
   #Simulacr .sc-tb-speed {
     display: flex; align-items: center; gap: 6px; color: var(--sc-text-faint); font-size: 11.5px;
@@ -176,6 +174,8 @@
     text-align: center;
   }
   #Simulacr .sc-tool:hover { background: var(--sc-panel-2); border-color: var(--sc-border); }
+  #Simulacr .sc-tool.sc-tool-armed { background: var(--sc-accent); border-color: var(--sc-accent); }
+  #Simulacr .sc-tool.sc-tool-armed span { color: var(--sc-bg); }
   #Simulacr .sc-tool:active { cursor: grabbing; }
   #Simulacr .sc-tool svg { width: 52px; height: 34px; pointer-events: none; }
   #Simulacr .sc-tool span {
@@ -249,6 +249,8 @@
     position: absolute;
     transform-origin: center;
     cursor: grab;
+    touch-action: none;
+    -webkit-touch-callout: none;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
   }
   #Simulacr .sc-comp:active { cursor: grabbing; }
@@ -540,63 +542,126 @@
   #Simulacr .sc-toast.sc-toast-ok { border-color: var(--sc-ok); color: var(--sc-ok); }
 
   /* ---------- Responsive ---------- */
+  /* ---------- Drawer mobile: nascosti di default su desktop ---------- */
+  #Simulacr .sc-mobile-only { display: none; }
+  #Simulacr .sc-drawer-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 8;
+  }
+  #Simulacr .sc-drawer-overlay.sc-show { display: block; }
+
   @media (max-width: 860px) {
-    #Simulacr .sc-toolbox { width: 128px; }
-    #Simulacr .sc-sidepanel { width: 200px; }
-    #Simulacr .sc-tool svg { width: 40px; height: 28px; }
+    #Simulacr .sc-toolbox { width: 148px; }
+    #Simulacr .sc-sidepanel { width: 220px; }
     #Simulacr .sc-brand span.sc-brand-text { display: none; }
   }
-  @media (max-width: 640px) {
-    #Simulacr { height: 560px; }
-    #Simulacr .sc-sidepanel { display: none; }
+
+  @media (max-width: 720px) {
+    #Simulacr .sc-mobile-only { display: flex; }
+    #Simulacr .sc-hide-narrow { display: none !important; }
+    #Simulacr .sc-tb-label { display: none; }
     #Simulacr .sc-tb-speed { display: none; }
+    #Simulacr .sc-topbar { padding: 6px 8px; gap: 6px; }
+    #Simulacr .sc-tb-btn { padding: 9px; min-width: 40px; justify-content: center; }
+    #Simulacr .sc-tb-btn svg { width: 18px; height: 18px; }
+
+    /* Toolbox e sidepanel diventano drawer scorrevoli sovrapposti, non layout fisso */
+    #Simulacr .sc-toolbox {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 220px;
+      z-index: 9;
+      transform: translateX(-100%);
+      transition: transform .22s ease;
+      box-shadow: 4px 0 18px rgba(0,0,0,0.35);
+    }
+    #Simulacr .sc-toolbox.sc-drawer-open { transform: translateX(0); }
+
+    #Simulacr .sc-sidepanel {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 280px;
+      z-index: 9;
+      transform: translateX(100%);
+      transition: transform .22s ease;
+      box-shadow: -4px 0 18px rgba(0,0,0,0.35);
+    }
+    #Simulacr .sc-sidepanel.sc-drawer-open { transform: translateX(0); }
+
+    /* Target touch più grandi ovunque nell'interfaccia */
+    #Simulacr .sc-tool { padding: 10px 6px; }
+    #Simulacr .sc-tool svg { width: 46px; height: 32px; }
+    #Simulacr .sc-check, #Simulacr .sc-radio { width: 19px; height: 19px; }
+    #Simulacr .sc-row { padding: 7px 0; }
+    #Simulacr .sc-vc-btn { width: 42px; height: 42px; }
+    #Simulacr .sc-vc-btn svg { width: 19px; height: 19px; }
+  }
+
+  @media (max-width: 480px) {
+    #Simulacr { height: 100vh; min-height: 480px; border-radius: 0; }
+    #Simulacr .sc-toolbox { width: 190px; }
+    #Simulacr .sc-sidepanel { width: 92vw; max-width: 320px; }
+    #Simulacr .sc-hint { max-width: 220px; font-size: 10.5px; left: 8px; bottom: 8px; }
+    #Simulacr .sc-viewport-controls { right: 8px; bottom: 8px; }
   }
 </style>
 
   <!-- ============ TOPBAR ============ -->
   <div class="sc-topbar">
+    <button class="sc-tb-btn sc-mobile-only sc-drawer-toggle" data-action="toggle-toolbox-drawer" title="Componenti">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
     <div class="sc-brand"><span class="sc-dot"></span><span class="sc-brand-text">Simulacr &middot; Circuiti</span></div>
     <button class="sc-tb-btn" data-action="tool-select" title="Seleziona / sposta (V)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l7 16 2-7 7-2z"/></svg>
-      Seleziona
+      <span class="sc-tb-label">Seleziona</span>
     </button>
     <button class="sc-tb-btn" data-action="tool-wire" title="Disegna filo (F)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 12h10"/></svg>
-      Filo
+      <span class="sc-tb-label">Filo</span>
     </button>
     <button class="sc-tb-btn" data-action="tool-delete" title="Elimina (Del)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
-      Elimina
+      <span class="sc-tb-label">Elimina</span>
     </button>
     <div class="sc-tb-sep"></div>
     <button class="sc-tb-btn" data-action="run-toggle" title="Play/Pausa simulazione">
       <svg class="sc-icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       <svg class="sc-icon-pause sc-hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-      <span class="sc-run-label">Pausa</span>
+      <span class="sc-run-label sc-tb-label">Pausa</span>
     </button>
     <div class="sc-tb-speed">
       Velocit&agrave;
       <input type="range" min="0" max="200" value="100" data-role="speed-slider">
     </div>
-    <div class="sc-tb-sep"></div>
-    <button class="sc-tb-btn" data-action="clear-all" title="Nuovo circuito">
+    <div class="sc-tb-sep sc-hide-narrow"></div>
+    <button class="sc-tb-btn sc-hide-narrow" data-action="clear-all" title="Nuovo circuito">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-      Nuovo
+      <span class="sc-tb-label">Nuovo</span>
     </button>
-    <button class="sc-tb-btn" data-action="export-json" title="Esporta circuito">
+    <button class="sc-tb-btn sc-hide-narrow" data-action="export-json" title="Esporta circuito">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg>
-      Salva
+      <span class="sc-tb-label">Salva</span>
     </button>
-    <button class="sc-tb-btn" data-action="import-json" title="Importa circuito">
+    <button class="sc-tb-btn sc-hide-narrow" data-action="import-json" title="Importa circuito">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21V9m0 0l-4 4m4-4l4 4M4 7V4h16v3"/></svg>
-      Apri
+      <span class="sc-tb-label">Apri</span>
     </button>
     <input type="file" data-role="file-input" accept="application/json" class="sc-hidden">
     <div class="sc-tb-spacer"></div>
-    <button class="sc-tb-btn" data-action="toggle-fullscreen" title="Schermo intero">
+    <button class="sc-tb-btn sc-hide-narrow" data-action="toggle-fullscreen" title="Schermo intero">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
     </button>
+    <button class="sc-tb-btn sc-mobile-only sc-drawer-toggle" data-action="toggle-sidepanel-drawer" title="Strumenti e analisi">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+    </button>
   </div>
+
+  <!-- Overlay per chiudere i drawer mobile toccando fuori -->
+  <div class="sc-drawer-overlay" data-role="drawer-overlay"></div>
 
   <!-- ============ MAIN ============ -->
   <div class="sc-main">
@@ -1134,13 +1199,10 @@
       {x:-50,y:-22,name:"p1"}, {x:-50,y:22,name:"p2"},
       {x:50,y:-22,name:"s1"}, {x:50,y:22,name:"s2"}
     ],
-    params: { ratio: 2, lp: 0.5, coupling: 0.98, rprimary: 0.3, rsecondary: 0.3 },
+    params: { ratio: 2, lp: 0.5 },
     paramDefs: [
       {key:"ratio", label:"Rapporto spire (Ns/Np)", min:0.05, max:50, step:0.05, unit:""},
-      {key:"lp", label:"Induttanza primario (H)", min:0.001, max:50, step:0.001, unit:"H"},
-      {key:"coupling", label:"Coefficiente accoppiamento k", min:0.01, max:0.999, step:0.001, unit:""},
-      {key:"rprimary", label:"Resistenza avv. primario (Ω)", min:0, max:50, step:0.01, unit:"Ω"},
-      {key:"rsecondary", label:"Resistenza avv. secondario (Ω)", min:0, max:50, step:0.01, unit:"Ω"}
+      {key:"lp", label:"Induttanza magnetizzante (H)", min:0.001, max:50, step:0.001, unit:"H"}
     ],
     draw: function(g, comp){
       g.appendChild(svgEl("line", {x1:-50,y1:-22,x2:-14,y2:-22, stroke:"var(--sc-wire)", "stroke-width":3}));
@@ -1353,11 +1415,16 @@
       var el = COMP_DEFS[comp.type].electrical;
       if (!el) return;
       if (el.kind === "vsource" || el.kind === "vsourceAC" || el.kind === "ammeter" || el.kind === "opamp"){
-        voltageBranches.push({ id:id, kind: el.kind });
+        voltageBranches.push({ id:id, kind: el.kind, extra:1 });
+      }
+      if (el.kind === "transformer"){
+        voltageBranches.push({ id:id, kind: el.kind, extra:2 }); // due variabili ausiliarie: corrente primaria e secondaria
       }
     });
 
-    var M = N + voltageBranches.length;
+    var branchSlots = 0;
+    voltageBranches.forEach(function(b){ b.slotStart = branchSlots; branchSlots += b.extra; });
+    var M = N + branchSlots;
     if (M === 0){
       return { ok:false, reason:"empty", V:{}, I:{}, nodeIndex:nodeIndex, nodeFor: topo.nodeFor, groundNode: groundNode };
     }
@@ -1367,7 +1434,7 @@
     if (prevSolved && prevSolved.xRaw && prevSolved.xRaw.length === M){ x = prevSolved.xRaw.slice(); }
 
     var branchIndexOf = {};
-    voltageBranches.forEach(function(b,i){ branchIndexOf[b.id] = N + i; });
+    voltageBranches.forEach(function(b){ branchIndexOf[b.id] = N + b.slotStart; });
 
     function idxNode(nodeId){
       if (nodeId === groundNode) return -1;
@@ -1461,45 +1528,6 @@
           stampG(ia4, ib4, Gd);
           stampI(ia4, ib4, -Ieq3);
         }
-        else if (el.kind === "transformer"){
-          // Modello a due induttori accoppiati (primario Lp, secondario Ls=Lp*ratio^2, mutua M=k*sqrt(Lp*Ls))
-          // Companion trapezoidale su sistema 2x2: v = L di/dt  ->  discretizzato in Norton equivalente accoppiato.
-          var nP1 = topo.nodeFor(id+"::p1"), nP2 = topo.nodeFor(id+"::p2");
-          var nS1 = topo.nodeFor(id+"::s1"), nS2 = topo.nodeFor(id+"::s2");
-          var ip1=idxNode(nP1), ip2=idxNode(nP2), is1=idxNode(nS1), is2=idxNode(nS2);
-          var Lp = Math.max(comp.params.lp, 1e-6);
-          var ratio = comp.params.ratio;
-          var Ls = Lp * ratio * ratio;
-          var k = clamp(comp.params.coupling, 0.01, 0.999);
-          var Mut = k * Math.sqrt(Lp*Ls);
-          var h = Math.max(dt, 1e-6);
-          // Matrice induttanza 2x2 [[Lp,M],[M,Ls]] -> inversa analitica
-          var det = Lp*Ls - Mut*Mut;
-          if (Math.abs(det) < 1e-15) det = 1e-15;
-          var g11 =  Ls/det, g12 = -Mut/det, g21 = -Mut/det, g22 = Lp/det;
-          // Discretizzazione trapezoidale: i(t) = i(t-h) + (h/2)*Ginv*(v(t)+v(t-h))
-          var vpPrev = comp._vpPrev||0, vsPrev = comp._vsPrev||0;
-          var ipPrev = comp._ipPrev||0, isPrev = comp._isPrev||0;
-          var factor = h/2;
-          // correnti equivalenti storiche (source Norton)
-          var IeqP = ipPrev + factor*(g11*vpPrev + g12*vsPrev);
-          var IeqS = isPrev + factor*(g21*vpPrev + g22*vsPrev);
-          var Gpp = factor*g11, Gps = factor*g12, Gsp = factor*g21, Gss = factor*g22;
-          // stampa conduttanze mutue a 4 nodi (primario: p1(+)-p2(-), secondario: s1(+)-s2(-))
-          function stampMutual(nA, nB, nC, nD, gval){
-            // corrente aggiuntiva tra A-B dipendente da v(C)-v(D), stampata simmetricamente
-            if (nA>=0 && nC>=0) A[nA][nC]+=gval;
-            if (nA>=0 && nD>=0) A[nA][nD]-=gval;
-            if (nB>=0 && nC>=0) A[nB][nC]-=gval;
-            if (nB>=0 && nD>=0) A[nB][nD]+=gval;
-          }
-          stampMutual(ip1, ip2, ip1, ip2, Gpp);
-          stampMutual(ip1, ip2, is1, is2, Gps);
-          stampMutual(is1, is2, ip1, ip2, Gsp);
-          stampMutual(is1, is2, is1, is2, Gss);
-          stampI(ip1, ip2, -IeqP);
-          stampI(is1, is2, -IeqS);
-        }
       });
 
       voltageBranches.forEach(function(b){
@@ -1537,6 +1565,49 @@
           if (iMinus>=0){ A[bi][iMinus] += geff; }
           Bv[bi] += (vout_target - geff*vin);
           // ingresso op-amp idealmente non assorbe corrente (impedenza infinita): nessuno stamp su + e -
+        } else if (b.kind === "transformer"){
+          // Trasformatore ideale con vincoli algebrici (metodo standard MNA a 2 branch):
+          //   Vs1 - Vs2 = ratio * (Vp1 - Vp2)         [vincolo di tensione]
+          //   Ip = -ratio * Is                         [vincolo di corrente, conservazione potenza]
+          // Più una induttanza di magnetizzazione in parallelo al primario (Norton companion
+          // trapezoidale) per rappresentare l'induttanza finita reale e stabilizzare la DC.
+          var nP1t = topo.nodeFor(b.id+"::p1"), nP2t = topo.nodeFor(b.id+"::p2");
+          var nS1t = topo.nodeFor(b.id+"::s1"), nS2t = topo.nodeFor(b.id+"::s2");
+          var ip1t=idxNode(nP1t), ip2t=idxNode(nP2t), is1t=idxNode(nS1t), is2t=idxNode(nS2t);
+          var biV = bi;       // equazione di vincolo tensione -> variabile ausiliaria = corrente primaria Ip
+          var biI = bi + 1;   // equazione di vincolo corrente -> variabile ausiliaria = corrente secondaria Is
+          var ratioT = comp.params.ratio;
+
+          // --- Induttanza di magnetizzazione lato primario (Norton companion) ---
+          var LmagT = Math.max(comp.params.lp, 1e-6);
+          var hT = Math.max(dt, 1e-6);
+          var GmagT = hT/(2*LmagT);
+          var vpPrevT = comp._vpPrev || 0;
+          var imagPrevT = comp._imagPrev || 0;
+          var IeqMagT = imagPrevT + GmagT*vpPrevT;
+          stampG(ip1t, ip2t, GmagT);
+          stampI(ip1t, ip2t, -IeqMagT);
+          comp._pendingGmagT = GmagT; comp._pendingIeqMagT = IeqMagT;
+
+          // --- Branch 1: corrente primaria Ip entra/esce dai nodi primari ---
+          if (ip1t>=0){ A[ip1t][biV]+=1; }
+          if (ip2t>=0){ A[ip2t][biV]-=1; }
+          // --- Branch 2: corrente secondaria Is entra/esce dai nodi secondari ---
+          if (is1t>=0){ A[is1t][biI]+=1; }
+          if (is2t>=0){ A[is2t][biI]-=1; }
+
+          // Equazione vincolo tensione (riga biV): Vs1-Vs2 - ratio*(Vp1-Vp2) = 0
+          if (is1t>=0) A[biV][is1t]+=1;
+          if (is2t>=0) A[biV][is2t]-=1;
+          if (ip1t>=0) A[biV][ip1t]-=ratioT;
+          if (ip2t>=0) A[biV][ip2t]+=ratioT;
+          Bv[biV] += 0;
+
+          // Equazione vincolo corrente (riga biI): Ip + ratio*Is = 0  ->  la corrente ausiliaria
+          // biI rappresenta Is; qui vincoliamo Ip (variabile biV) in funzione di Is (variabile biI)
+          A[biI][biV] += 1;
+          A[biI][biI] += ratioT;
+          Bv[biI] += 0;
         } else if (b.kind === "vsourceAC"){
           var nA5 = topo.nodeFor(b.id+"::a");
           var nB5 = topo.nodeFor(b.id+"::b");
@@ -1599,24 +1670,14 @@
         var vP = vNode(topo.nodeFor(id+"::p1")) - vNode(topo.nodeFor(id+"::p2"));
         var vS = vNode(topo.nodeFor(id+"::s1")) - vNode(topo.nodeFor(id+"::s2"));
         Vcomp[id] = vP;
-        comp._vSecondary = vS; // usato per inspector/analisi
-        var LpT = Math.max(comp.params.lp,1e-6);
-        var ratioT = comp.params.ratio;
-        var LsT = LpT*ratioT*ratioT;
-        var kT = clamp(comp.params.coupling,0.01,0.999);
-        var MutT = kT*Math.sqrt(LpT*LsT);
-        var hT = Math.max(dt,1e-6);
-        var detT = LpT*LsT - MutT*MutT; if (Math.abs(detT)<1e-15) detT=1e-15;
-        var g11T=LsT/detT, g12T=-MutT/detT, g21T=-MutT/detT, g22T=LpT/detT;
-        var vpPrevT=comp._vpPrev||0, vsPrevT=comp._vsPrev||0;
-        var ipPrevT=comp._ipPrev||0, isPrevT=comp._isPrev||0;
-        var factorT=hT/2;
-        var ip = ipPrevT + factorT*(g11T*vpPrevT+g12T*vsPrevT) + factorT*(g11T*vP+g12T*vS);
-        var is = isPrevT + factorT*(g21T*vpPrevT+g22T*vsPrevT) + factorT*(g21T*vP+g22T*vS);
-        I[id] = ip;
-        comp._isCurrent = is;
-        comp._vpPrev = vP; comp._vsPrev = vS;
-        comp._ipPrev = ip; comp._isPrev = is;
+        comp._vSecondary = vS;
+        var biV2 = branchIndexOf[id];
+        var biI2 = biV2 + 1;
+        I[id] = x[biV2];        // corrente primaria (Ip)
+        comp._isCurrent = x[biI2]; // corrente secondaria (Is)
+        // aggiorna stato induttanza di magnetizzazione
+        comp._vpPrev = vP;
+        comp._imagPrev = (comp._pendingGmagT||0)*vP + (comp._pendingIeqMagT||0);
       } else if (el.kind === "capacitor"){
         var Cval2 = Math.max(comp.params.capacitance,1e-15);
         var Geq3 = (2*Cval2)/Math.max(dt,1e-6);
@@ -1802,22 +1863,35 @@
 
     def.draw(g, comp);
 
-    // terminali (pallini)
+    // terminali (pallini) — hit-area invisibile più ampia per il tocco, pallino visivo piccolo
     def.terminals.forEach(function(t){
+      var hitArea = svgEl("circle", { cx:t.x, cy:t.y, r:16, fill:"transparent", "data-term":t.name, "data-term-hit":"1" });
+      g.appendChild(hitArea);
       var dot = svgEl("circle", { class:"sc-node-dot", cx:t.x, cy:t.y, r:4.2, "data-term":t.name });
       g.appendChild(dot);
     });
 
-    // etichetta / valore
+    // etichetta / valore — sempre orizzontali e leggibili, anche se il componente è ruotato.
+    // Il punto di ancoraggio segue la rotazione del componente (resta "sotto" di esso visivamente),
+    // ma il testo stesso viene controruotato per apparire sempre dritto nel sistema di riferimento mondo.
+    var rot = comp.rot || 0;
+    var labelOffsetY = h/2 + 16;
+    var valueOffsetY = h/2 + 30;
     if (SC.state.showLabels){
-      var lbl = svgEl("text", { x:0, y: h/2 + 16, class:"sc-comp-label", "text-anchor":"middle" });
+      var lbl = svgEl("text", {
+        x:0, y:0, class:"sc-comp-label", "text-anchor":"middle",
+        transform: "translate(0,"+labelOffsetY+") rotate("+(-rot)+")"
+      });
       lbl.textContent = comp.label;
       g.appendChild(lbl);
     }
     if (SC.state.showValues){
       var valTxt = componentValueLabel(comp);
       if (valTxt){
-        var val = svgEl("text", { x:0, y: h/2 + 30, class:"sc-comp-value", "text-anchor":"middle" });
+        var val = svgEl("text", {
+          x:0, y:0, class:"sc-comp-value", "text-anchor":"middle",
+          transform: "translate(0,"+valueOffsetY+") rotate("+(-rot)+")"
+        });
         val.textContent = valTxt;
         g.appendChild(val);
       }
@@ -1841,6 +1915,8 @@
       case "inductor": return fmtUnit(comp.params.inductance,"H");
       case "diode": case "led": return fmtUnit(comp.params.vf,"V");
       case "fuse": return fmtUnit(comp.params.maxCurrent,"A");
+      case "transformer": return "1:" + round2(comp.params.ratio);
+      case "opamp": return "x" + fmtUnit(comp.params.gain,"");
       default: return "";
     }
   }
@@ -1889,7 +1965,7 @@
     g.addEventListener("pointerdown", function(ev){
       if (ev.button !== 0) return;
       var targetTerm = ev.target.getAttribute && ev.target.getAttribute("data-term");
-      if (SC.state.tool === "wire" || targetTerm){
+      if (SC.state.tool === "wire"){
         ev.stopPropagation();
         startWireDraw({ compId: comp.id, term: targetTerm || def.terminals[0].name }, ev);
         return;
@@ -1904,39 +1980,75 @@
       selectComponent(comp.id);
       var startWorld = screenToWorld(ev.clientX, ev.clientY);
       dragState = { startX: comp.x, startY: comp.y, startWorld: startWorld, moved:false };
-      g.setPointerCapture(ev.pointerId);
+      if (g.setPointerCapture){ try { g.setPointerCapture(ev.pointerId); } catch(e){} }
+
+      // Long-press (touch): apre il menu contestuale (ruota/duplica/elimina) senza bisogno del tasto destro
+      var longPressTimer = null;
+      var isTouchPointer = ev.pointerType === "touch";
+      if (isTouchPointer){
+        longPressTimer = setTimeout(function(){
+          if (dragState && !dragState.moved){
+            longPressTimer = null;
+            dragState = null;
+            if (g.releasePointerCapture){ try { g.releasePointerCapture(ev.pointerId); } catch(e){} }
+            g.removeEventListener("pointermove", onMove);
+            g.removeEventListener("pointerup", onUp);
+            openComponentContextMenu(ev.clientX, ev.clientY);
+          }
+        }, 480);
+      }
 
       function onMove(mv){
         var w = screenToWorld(mv.clientX, mv.clientY);
         var dx = w.x - dragState.startWorld.x;
         var dy = w.y - dragState.startWorld.y;
-        if (Math.abs(dx)>2 || Math.abs(dy)>2) dragState.moved = true;
+        if (Math.abs(dx)>2 || Math.abs(dy)>2){
+          dragState.moved = true;
+          if (longPressTimer){ clearTimeout(longPressTimer); longPressTimer = null; }
+        }
         comp.x = snap(dragState.startX + dx);
         comp.y = snap(dragState.startY + dy);
         g.setAttribute("transform", "translate("+comp.x+","+comp.y+") rotate("+(comp.rot||0)+")");
-        refreshWiresForComponent(comp.id);
+        updateWiresForComponentFast(comp.id);
         markDirty();
       }
       function onUp(uv){
-        g.releasePointerCapture(uv.pointerId);
+        if (longPressTimer){ clearTimeout(longPressTimer); longPressTimer = null; }
+        if (g.releasePointerCapture){ try { g.releasePointerCapture(uv.pointerId); } catch(e){} }
         g.removeEventListener("pointermove", onMove);
         g.removeEventListener("pointerup", onUp);
-        if (!dragState.moved && def.interactive){ def.onClick(comp); renderComponent(comp); selectComponent(comp.id); }
+        g.removeEventListener("pointercancel", onCancel);
+        if (dragState && !dragState.moved && def.interactive){ def.onClick(comp); renderComponent(comp); selectComponent(comp.id); }
+        refreshWiresForComponent(comp.id);
         dragState = null;
         markDirty();
       }
+      function onCancel(uv){
+        if (longPressTimer){ clearTimeout(longPressTimer); longPressTimer = null; }
+        if (g.releasePointerCapture){ try { g.releasePointerCapture(uv.pointerId); } catch(e){} }
+        g.removeEventListener("pointermove", onMove);
+        g.removeEventListener("pointerup", onUp);
+        g.removeEventListener("pointercancel", onCancel);
+        refreshWiresForComponent(comp.id); // ripristina posizione visiva coerente coi dati
+        dragState = null;
+      }
       g.addEventListener("pointermove", onMove);
       g.addEventListener("pointerup", onUp);
+      g.addEventListener("pointercancel", onCancel);
     });
 
-    g.addEventListener("contextmenu", function(ev){
-      ev.preventDefault(); ev.stopPropagation();
-      selectComponent(comp.id);
-      showContextMenu(ev.clientX, ev.clientY, [
+    function openComponentContextMenu(clientX, clientY){
+      showContextMenu(clientX, clientY, [
         { label:"Ruota 90°", action:function(){ comp.rot = ((comp.rot||0)+90)%360; renderComponent(comp); refreshWiresForComponent(comp.id); markDirty(); } },
         { label:"Duplica", action:function(){ var c2=addComponent(comp.type, comp.x+40, comp.y+40, {params:comp.params, rot:comp.rot}); selectComponent(c2.id); } },
         { label:"Elimina", danger:true, action:function(){ removeComponent(comp.id); } }
       ]);
+    }
+
+    g.addEventListener("contextmenu", function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      selectComponent(comp.id);
+      openComponentContextMenu(ev.clientX, ev.clientY);
     });
   }
 
@@ -1947,9 +2059,29 @@
     });
   }
 
+  // Versione leggera: aggiorna solo le coordinate del path SVG esistente, senza ricreare
+  // l'elemento né i suoi listener. Usata durante il drag continuo per fluidità su mobile.
+  function updateWiresForComponentFast(compId){
+    Object.keys(SC.state.wires).forEach(function(wid){
+      var w = SC.state.wires[wid];
+      if (!((w.a.compId===compId) || (w.b.compId===compId))) return;
+      var g = $('[data-wid="'+wid+'"]', wireLayer);
+      if (!g) { renderWire(w); return; }
+      var pa = endpointPos(w.a), pb = endpointPos(w.b);
+      var d = "M"+pa.x+" "+pa.y+" L"+pb.x+" "+pb.y;
+      var hit = $(".sc-wire-hit", g), path = $(".sc-wire-path", g);
+      if (hit) hit.setAttribute("d", d);
+      if (path) path.setAttribute("d", d);
+    });
+  }
+
   /* ---------------- Disegno filo interattivo con snap ---------------- */
 
-  var SNAP_RADIUS = 22;
+  var SNAP_RADIUS = isTouchDevice() ? 34 : 22;
+
+  function isTouchDevice(){
+    return ("ontouchstart" in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
+  }
 
   function findNearestTerminal(worldPos, excludeCompId, excludeTerm){
     var best = null, bestD = SNAP_RADIUS;
@@ -1976,6 +2108,7 @@
     function onUp(uv){
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onCancel);
       previewPath.remove();
       clearHighlight();
       var w = screenToWorld(uv.clientX, uv.clientY);
@@ -1989,8 +2122,16 @@
         addWire(fromTerm, { freeId: freeId, x: snap(w.x), y: snap(w.y) });
       }
     }
+    function onCancel(){
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onCancel);
+      previewPath.remove();
+      clearHighlight();
+    }
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onCancel);
   }
 
   var highlightedDot = null;
@@ -2057,6 +2198,22 @@
       readout.innerHTML = '<span>Lettura</span><strong data-role="inspector-reading" style="font-family:var(--sc-font-mono);color:var(--sc-accent)">—</strong>';
       inspectorEl.appendChild(readout);
     }
+    if (def.electrical && def.electrical.kind==="transformer"){
+      var readoutP = document.createElement("div");
+      readoutP.className = "sc-row"; readoutP.style.marginTop = "6px";
+      readoutP.innerHTML = '<span>V primario</span><strong data-role="inspector-reading" style="font-family:var(--sc-font-mono);color:var(--sc-accent)">—</strong>';
+      inspectorEl.appendChild(readoutP);
+      var readoutS = document.createElement("div");
+      readoutS.className = "sc-row";
+      readoutS.innerHTML = '<span>V secondario</span><strong data-role="inspector-reading-2" style="font-family:var(--sc-font-mono);color:var(--sc-accent)">—</strong>';
+      inspectorEl.appendChild(readoutS);
+    }
+    if (def.electrical && def.electrical.kind==="opamp"){
+      var readoutO = document.createElement("div");
+      readoutO.className = "sc-row"; readoutO.style.marginTop = "6px";
+      readoutO.innerHTML = '<span>Vout</span><strong data-role="inspector-reading" style="font-family:var(--sc-font-mono);color:var(--sc-accent)">—</strong>';
+      inspectorEl.appendChild(readoutO);
+    }
 
     var delBtn = document.createElement("button");
     delBtn.className = "sc-btn-danger";
@@ -2119,12 +2276,25 @@
     toast(COMP_DEFS[type].label + " aggiunto");
   });
 
-  // Supporto touch: tocca lo strumento poi tocca lo stage per piazzare (fallback mobile)
+  // Supporto touch: tocca lo strumento (chiude il drawer per rivelare lo stage) poi tocca lo stage per piazzare
   var pendingPlacement = null;
+  var pendingPlacementEl = null;
   $all(".sc-tool", toolboxEl).forEach(function(toolEl){
     toolEl.addEventListener("touchstart", function(ev){
-      pendingPlacement = toolEl.getAttribute("data-comp");
+      var type = toolEl.getAttribute("data-comp");
+      if (pendingPlacement === type){
+        // secondo tocco sullo stesso strumento: annulla il piazzamento
+        pendingPlacement = null;
+        if (pendingPlacementEl) pendingPlacementEl.classList.remove("sc-tool-armed");
+        pendingPlacementEl = null;
+        return;
+      }
+      if (pendingPlacementEl) pendingPlacementEl.classList.remove("sc-tool-armed");
+      pendingPlacement = type;
+      pendingPlacementEl = toolEl;
+      toolEl.classList.add("sc-tool-armed");
       toast("Tocca lo stage per posizionare: " + COMP_DEFS[pendingPlacement].label);
+      closeDrawers();
     }, {passive:true});
   });
   stageWrap.addEventListener("pointerdown", function(ev){
@@ -2132,7 +2302,9 @@
       var w = screenToWorld(ev.clientX, ev.clientY);
       var comp = addComponent(pendingPlacement, w.x, w.y);
       selectComponent(comp.id);
+      if (pendingPlacementEl) pendingPlacementEl.classList.remove("sc-tool-armed");
       pendingPlacement = null;
+      pendingPlacementEl = null;
     }
   });
 
@@ -2140,11 +2312,13 @@
 
   stageWrap.addEventListener("pointerdown", function(ev){
     if (ev.target !== stageSvg && ev.target !== stageWrap) return;
+    if (ev.pointerType === "touch" && pinchState) return; // pinch in corso, ignora il pan singolo
     selectComponent(null);
     var v = SC.state.view;
     var start = { x: ev.clientX, y: ev.clientY, vx: v.x, vy: v.y };
     stageSvg.classList.add("sc-panning");
     function onMove(mv){
+      if (pinchState) { onUp(); return; } // un secondo dito è arrivato: passa al pinch
       v.x = start.vx + (mv.clientX - start.x);
       v.y = start.vy + (mv.clientY - start.y);
       applyViewTransform();
@@ -2153,9 +2327,11 @@
       stageSvg.classList.remove("sc-panning");
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
     }
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
   });
 
   stageWrap.addEventListener("wheel", function(ev){
@@ -2170,6 +2346,49 @@
     v.y = my - wy*v.zoom;
     applyViewTransform();
   }, { passive:false });
+
+  /* ---------------- Pinch-to-zoom (due dita) per touch ---------------- */
+  var pinchState = null;
+  function touchDist(t0, t1){ return dist(t0.clientX, t0.clientY, t1.clientX, t1.clientY); }
+  function touchMid(t0, t1){ return { x:(t0.clientX+t1.clientX)/2, y:(t0.clientY+t1.clientY)/2 }; }
+
+  stageWrap.addEventListener("touchstart", function(ev){
+    if (ev.touches.length === 2){
+      ev.preventDefault();
+      var v = SC.state.view;
+      var rect = stageSvg.getBoundingClientRect();
+      var mid = touchMid(ev.touches[0], ev.touches[1]);
+      pinchState = {
+        startDist: touchDist(ev.touches[0], ev.touches[1]),
+        startZoom: v.zoom,
+        startVx: v.x, startVy: v.y,
+        midX: mid.x - rect.left, midY: mid.y - rect.top
+      };
+    }
+  }, { passive:false });
+
+  stageWrap.addEventListener("touchmove", function(ev){
+    if (pinchState && ev.touches.length === 2){
+      ev.preventDefault();
+      var v = SC.state.view;
+      var rect = stageSvg.getBoundingClientRect();
+      var newDist = touchDist(ev.touches[0], ev.touches[1]);
+      var scale = newDist / Math.max(pinchState.startDist, 1);
+      var newZoom = clamp(pinchState.startZoom * scale, 0.35, 3);
+      // mantiene il punto medio del pinch fermo sullo schermo durante lo zoom
+      var wx = (pinchState.midX - pinchState.startVx) / pinchState.startZoom;
+      var wy = (pinchState.midY - pinchState.startVy) / pinchState.startZoom;
+      v.zoom = newZoom;
+      v.x = pinchState.midX - wx*newZoom;
+      v.y = pinchState.midY - wy*newZoom;
+      applyViewTransform();
+    }
+  }, { passive:false });
+
+  stageWrap.addEventListener("touchend", function(ev){
+    if (ev.touches.length < 2){ pinchState = null; }
+  }, { passive:true });
+  stageWrap.addEventListener("touchcancel", function(){ pinchState = null; }, { passive:true });
 
   $('[data-action="zoom-in"]').addEventListener("click", function(){ zoomBy(1.2); });
   $('[data-action="zoom-out"]').addEventListener("click", function(){ zoomBy(0.83); });
@@ -2274,6 +2493,34 @@
     if (!document.fullscreenElement){ ROOT.requestFullscreen && ROOT.requestFullscreen(); }
     else { document.exitFullscreen && document.exitFullscreen(); }
   });
+
+  /* ---------------- Drawer mobile (toolbox / pannello strumenti) ---------------- */
+  var drawerOverlay = $('[data-role="drawer-overlay"]');
+
+  function closeDrawers(){
+    toolboxEl.classList.remove("sc-drawer-open");
+    $(".sc-sidepanel").classList.remove("sc-drawer-open");
+    drawerOverlay.classList.remove("sc-show");
+  }
+  function openDrawer(which){
+    closeDrawers();
+    if (which === "toolbox"){ toolboxEl.classList.add("sc-drawer-open"); }
+    if (which === "sidepanel"){ $(".sc-sidepanel").classList.add("sc-drawer-open"); }
+    drawerOverlay.classList.add("sc-show");
+  }
+  $('[data-action="toggle-toolbox-drawer"]').addEventListener("click", function(){
+    if (toolboxEl.classList.contains("sc-drawer-open")) closeDrawers();
+    else openDrawer("toolbox");
+  });
+  $('[data-action="toggle-sidepanel-drawer"]').addEventListener("click", function(){
+    if ($(".sc-sidepanel").classList.contains("sc-drawer-open")) closeDrawers();
+    else openDrawer("sidepanel");
+  });
+  drawerOverlay.addEventListener("click", closeDrawers);
+  drawerOverlay.addEventListener("touchstart", closeDrawers, {passive:true});
+
+  // Chiudi automaticamente il drawer toolbox dopo aver piazzato un componente su mobile (tocco diretto)
+  var _origPendingPlacementSetter = null; // segnaposto, gestito sotto nel blocco touch placement
 
   $('[data-action="toggle-collapse"]').addEventListener("click", function(ev){
     ev.currentTarget.closest(".sc-card").classList.toggle("sc-collapsed");
@@ -2383,6 +2630,16 @@
           var insReadingA = $('[data-role="inspector-reading"]', inspectorEl);
           if (insReadingA) insReadingA.textContent = fmtUnit(ia,"A");
         }
+      }
+      if (el && el.kind === "transformer" && SC.state.selection === id){
+        var insP = $('[data-role="inspector-reading"]', inspectorEl);
+        var insS = $('[data-role="inspector-reading-2"]', inspectorEl);
+        if (insP) insP.textContent = fmtUnit(Vc[id]||0, "V");
+        if (insS) insS.textContent = fmtUnit(comp._vSecondary||0, "V");
+      }
+      if (el && el.kind === "opamp" && SC.state.selection === id){
+        var insOut = $('[data-role="inspector-reading"]', inspectorEl);
+        if (insOut) insOut.textContent = fmtUnit(Vc[id]||0, "V");
       }
       if (comp.type === "motor"){
         var rotorG = g.querySelector('[data-role="rotor"]');
@@ -2524,6 +2781,13 @@
       if (el && (el.kind === "ammeter")){
         channels.push({ id:id, label: comp.label+" (A)", get: function(res){ return (res.I && res.I[id]) || 0; } });
       }
+      if (el && (el.kind === "opamp")){
+        channels.push({ id:id, label: comp.label+" Vout", get: function(res){ return (res.Vcomp && res.Vcomp[id]) || 0; } });
+      }
+      if (el && (el.kind === "transformer")){
+        channels.push({ id:id, label: comp.label+" Vp", get: function(res){ return (res.Vcomp && res.Vcomp[id]) || 0; } });
+        channels.push({ id:id+"_s", label: comp.label+" Vs", get: function(){ return comp._vSecondary || 0; } });
+      }
     });
     return channels;
   }
@@ -2626,5 +2890,3 @@
 })();
 </script>
 </div>
-<!-- Separator -->
-</html>
