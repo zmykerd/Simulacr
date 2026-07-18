@@ -37,37 +37,6 @@
     user-select: none;
     -webkit-user-select: none;
   }
-
-  /* ---------- Tema chiaro: segue le preferenze del sistema/browser ---------- */
-  @media (prefers-color-scheme: light) {
-    #Simulacr {
-      --sc-bg: #eef1f6;
-      --sc-panel: #ffffff;
-      --sc-panel-2: #f4f6fa;
-      --sc-border: #d7dde6;
-      --sc-border-soft: #e3e8f0;
-      --sc-text: #1c2531;
-      --sc-text-dim: #56637a;
-      --sc-text-faint: #8b97ab;
-      --sc-accent: #0f9c8f;
-      --sc-accent-2: #d9821a;
-      --sc-danger: #d3453f;
-      --sc-ok: #2f9e57;
-      --sc-wire: #3b4657;
-      --sc-wire-hot: #c97c12;
-      --sc-grid-dot: #d7dde600;
-    }
-    #Simulacr .sc-stage-wrap {
-      background-color: #f7f9fc;
-      background-image:
-        linear-gradient(var(--sc-border-soft) 1px, transparent 1px),
-        linear-gradient(90deg, var(--sc-border-soft) 1px, transparent 1px);
-    }
-    #Simulacr .sc-comp { filter: drop-shadow(0 1px 3px rgba(30,40,60,0.16)); }
-    #Simulacr .sc-scope { background: #ffffff; border-color: var(--sc-border); }
-    #Simulacr .sc-electron { fill: #0f7fae; filter: drop-shadow(0 0 3px #0f7fae); }
-    #Simulacr .sc-toast { box-shadow: 0 6px 18px rgba(30,40,60,0.18); }
-  }
   #Simulacr .sc-hidden { display: none !important; }
   #Simulacr button {
     font-family: var(--sc-font);
@@ -606,6 +575,38 @@
     #Simulacr .sc-sidepanel { width: 92vw; max-width: 320px; }
     #Simulacr .sc-hint { max-width: 220px; font-size: 10.5px; left: 8px; bottom: 8px; }
     #Simulacr .sc-viewport-controls { right: 8px; bottom: 8px; }
+  }
+  /* ---------- Tema chiaro: segue le preferenze del sistema/browser ----------
+     Dichiarata per ultima nel foglio di stile così le sue regole vincono
+     su quelle base (scure) a parità di specificità del selettore. ---------- */
+  @media (prefers-color-scheme: light) {
+    #Simulacr {
+      --sc-bg: #eef1f6;
+      --sc-panel: #ffffff;
+      --sc-panel-2: #f4f6fa;
+      --sc-border: #d7dde6;
+      --sc-border-soft: #e3e8f0;
+      --sc-text: #1c2531;
+      --sc-text-dim: #56637a;
+      --sc-text-faint: #8b97ab;
+      --sc-accent: #0f9c8f;
+      --sc-accent-2: #d9821a;
+      --sc-danger: #d3453f;
+      --sc-ok: #2f9e57;
+      --sc-wire: #3b4657;
+      --sc-wire-hot: #c97c12;
+      --sc-grid-dot: #d7dde600;
+    }
+    #Simulacr .sc-stage-wrap {
+      background-color: #f7f9fc;
+      background-image:
+        linear-gradient(#c8d0dc 1px, transparent 1px),
+        linear-gradient(90deg, #c8d0dc 1px, transparent 1px);
+    }
+    #Simulacr .sc-comp { filter: drop-shadow(0 1px 3px rgba(30,40,60,0.16)); }
+    #Simulacr .sc-scope { background: #ffffff; border-color: var(--sc-border); }
+    #Simulacr .sc-electron { fill: #0f7fae; filter: drop-shadow(0 0 3px #0f7fae); }
+    #Simulacr .sc-toast { box-shadow: 0 6px 18px rgba(30,40,60,0.18); }
   }
 </style>
 
@@ -1871,16 +1872,27 @@
       g.appendChild(dot);
     });
 
-    // etichetta / valore — sempre orizzontali e leggibili, anche se il componente è ruotato.
-    // Il punto di ancoraggio segue la rotazione del componente (resta "sotto" di esso visivamente),
-    // ma il testo stesso viene controruotato per apparire sempre dritto nel sistema di riferimento mondo.
+    // etichetta / valore — sempre orizzontali, leggibili, e SEMPRE fuori dall'ingombro
+    // visivo reale del componente, anche quando la rotazione scambia effettivamente
+    // larghezza e altezza sullo schermo (es. un resistore orizzontale ruotato a 90°
+    // diventa verticale: la sua "altezza" visiva reale è la sua larghezza w, non h).
     var rot = comp.rot || 0;
-    var labelOffsetY = h/2 + 16;
-    var valueOffsetY = h/2 + 30;
+    var radRot = rot * Math.PI/180;
+    // Semi-estensione verticale reale del componente ruotato nel mondo (bounding box):
+    // per un rettangolo w x h ruotato di rot, l'estensione verticale è:
+    var halfExtentY = Math.abs(h/2 * Math.cos(radRot)) + Math.abs(w/2 * Math.sin(radRot));
+    var labelDist = halfExtentY + 16;
+    var valueDist = halfExtentY + 30;
+    // Punto nel sistema locale del componente che, dopo la rotazione del gruppo genitore,
+    // finisce esattamente a (0, labelDist) nel mondo — cioè sempre dritto sotto, mai dentro.
+    var labelX = round2(-Math.sin(-radRot) * labelDist);
+    var labelY = round2(Math.cos(-radRot) * labelDist);
+    var valueX = round2(-Math.sin(-radRot) * valueDist);
+    var valueY = round2(Math.cos(-radRot) * valueDist);
     if (SC.state.showLabels){
       var lbl = svgEl("text", {
-        x:0, y:0, class:"sc-comp-label", "text-anchor":"middle",
-        transform: "translate(0,"+labelOffsetY+") rotate("+(-rot)+")"
+        x:labelX, y:labelY, class:"sc-comp-label", "text-anchor":"middle",
+        transform: "rotate("+(-rot)+","+labelX+","+labelY+")"
       });
       lbl.textContent = comp.label;
       g.appendChild(lbl);
@@ -1889,8 +1901,8 @@
       var valTxt = componentValueLabel(comp);
       if (valTxt){
         var val = svgEl("text", {
-          x:0, y:0, class:"sc-comp-value", "text-anchor":"middle",
-          transform: "translate(0,"+valueOffsetY+") rotate("+(-rot)+")"
+          x:valueX, y:valueY, class:"sc-comp-value", "text-anchor":"middle",
+          transform: "rotate("+(-rot)+","+valueX+","+valueY+")"
         });
         val.textContent = valTxt;
         g.appendChild(val);
@@ -1980,7 +1992,6 @@
       selectComponent(comp.id);
       var startWorld = screenToWorld(ev.clientX, ev.clientY);
       dragState = { startX: comp.x, startY: comp.y, startWorld: startWorld, moved:false };
-      if (g.setPointerCapture){ try { g.setPointerCapture(ev.pointerId); } catch(e){} }
 
       // Long-press (touch): apre il menu contestuale (ruota/duplica/elimina) senza bisogno del tasto destro
       var longPressTimer = null;
@@ -1990,14 +2001,19 @@
           if (dragState && !dragState.moved){
             longPressTimer = null;
             dragState = null;
-            if (g.releasePointerCapture){ try { g.releasePointerCapture(ev.pointerId); } catch(e){} }
-            g.removeEventListener("pointermove", onMove);
-            g.removeEventListener("pointerup", onUp);
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+            window.removeEventListener("pointercancel", onCancel);
             openComponentContextMenu(ev.clientX, ev.clientY);
           }
         }, 480);
       }
 
+      // I listener sono agganciati a "window", non all'elemento <g>: un elemento SVG piccolo
+      // può facilmente "perdere" il puntatore durante un movimento rapido (specialmente su
+      // touch), lasciando il drag a metà — con il componente spostato ma i fili aggiornati
+      // solo in parte, o viceversa. Ascoltando su window il movimento viene sempre catturato,
+      // ovunque il dito o il mouse si trovi sullo schermo, esattamente come già fa il pan dello stage.
       function onMove(mv){
         var w = screenToWorld(mv.clientX, mv.clientY);
         var dx = w.x - dragState.startWorld.x;
@@ -2014,27 +2030,25 @@
       }
       function onUp(uv){
         if (longPressTimer){ clearTimeout(longPressTimer); longPressTimer = null; }
-        if (g.releasePointerCapture){ try { g.releasePointerCapture(uv.pointerId); } catch(e){} }
-        g.removeEventListener("pointermove", onMove);
-        g.removeEventListener("pointerup", onUp);
-        g.removeEventListener("pointercancel", onCancel);
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onCancel);
         if (dragState && !dragState.moved && def.interactive){ def.onClick(comp); renderComponent(comp); selectComponent(comp.id); }
         refreshWiresForComponent(comp.id);
         dragState = null;
         markDirty();
       }
-      function onCancel(uv){
+      function onCancel(){
         if (longPressTimer){ clearTimeout(longPressTimer); longPressTimer = null; }
-        if (g.releasePointerCapture){ try { g.releasePointerCapture(uv.pointerId); } catch(e){} }
-        g.removeEventListener("pointermove", onMove);
-        g.removeEventListener("pointerup", onUp);
-        g.removeEventListener("pointercancel", onCancel);
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onCancel);
         refreshWiresForComponent(comp.id); // ripristina posizione visiva coerente coi dati
         dragState = null;
       }
-      g.addEventListener("pointermove", onMove);
-      g.addEventListener("pointerup", onUp);
-      g.addEventListener("pointercancel", onCancel);
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onCancel);
     });
 
     function openComponentContextMenu(clientX, clientY){
