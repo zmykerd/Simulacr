@@ -19,6 +19,8 @@
 	<title>Simulacr - Elettronica</title>
 </head>
 <body>
+
+
 <div id="Simulacr">
 <style type="text/css">
 
@@ -118,7 +120,6 @@ body::before{
   #Simulacr ::-webkit-scrollbar-thumb { background: var(--sc-border); border-radius: 10px; }
   #Simulacr ::-webkit-scrollbar-thumb:hover { background: var(--sc-text-faint); }
 
-  /* ---------- Topbar ---------- */
   #Simulacr .sc-topbar {
     display: flex;
     align-items: center;
@@ -174,7 +175,6 @@ body::before{
   }
   #Simulacr .sc-tb-speed input[type="range"] { width: 80px; }
 
-  /* ---------- Main layout ---------- */
   #Simulacr .sc-main {
     flex: 1 1 auto;
     display: flex;
@@ -182,7 +182,6 @@ body::before{
     position: relative;
   }
 
-  /* ---------- Toolbox (left) ---------- */
   #Simulacr .sc-toolbox {
     width: 168px;
     flex: 0 0 auto;
@@ -244,7 +243,6 @@ body::before{
     line-height: 1.2;
   }
 
-  /* ---------- Canvas area (center) ---------- */
   #Simulacr .sc-stage-wrap {
     flex: 1 1 auto;
     position: relative;
@@ -302,7 +300,6 @@ body::before{
     z-index: 6;
   }
 
-  /* ---------- Components on stage ---------- */
   #Simulacr .sc-comp {
     position: absolute;
     cursor: grab;
@@ -350,7 +347,6 @@ body::before{
   }
   #Simulacr .sc-conv-arrow { fill: var(--sc-danger); }
 
-  /* ---------- Right side panel ---------- */
   #Simulacr .sc-sidepanel {
     width: 250px;
     flex: 0 0 auto;
@@ -524,7 +520,6 @@ body::before{
   }
   #Simulacr .sc-btn-outline:hover { background: var(--sc-panel); color: var(--sc-text); }
 
-  /* ---------- Oscilloscope / graph ---------- */
   #Simulacr .sc-scope {
     width: 100%;
     height: 110px;
@@ -536,7 +531,6 @@ body::before{
   #Simulacr .sc-scope-legend-item { display: flex; align-items: center; gap: 4px; font-size: 10.5px; color: var(--sc-text-faint); }
   #Simulacr .sc-scope-swatch { width: 9px; height: 9px; border-radius: 2px; }
 
-  /* ---------- Multimeter probe overlay ---------- */
   #Simulacr .sc-probe {
     position: absolute;
     width: 20px; height: 20px;
@@ -551,7 +545,6 @@ body::before{
     background: rgba(10,15,24,0.8);
   }
 
-  /* ---------- Context menu ---------- */
   #Simulacr .sc-ctxmenu {
     position: absolute;
     background: var(--sc-panel-2);
@@ -576,7 +569,6 @@ body::before{
   #Simulacr .sc-ctxmenu button:hover { background: var(--sc-panel); }
   #Simulacr .sc-ctxmenu button.sc-danger-item { color: var(--sc-danger); }
 
-  /* ---------- Toast ---------- */
   #Simulacr .sc-toast {
     position: absolute;
     top: 54px;
@@ -598,8 +590,6 @@ body::before{
   #Simulacr .sc-toast.sc-toast-err { border-color: var(--sc-danger); color: var(--sc-danger); }
   #Simulacr .sc-toast.sc-toast-ok { border-color: var(--sc-ok); color: var(--sc-ok); }
 
-  /* ---------- Responsive ---------- */
-  /* ---------- Drawer mobile: nascosti di default su desktop ---------- */
   #Simulacr .sc-mobile-only { display: none; }
   #Simulacr .sc-drawer-overlay {
     display: none;
@@ -625,7 +615,6 @@ body::before{
     #Simulacr .sc-tb-btn { padding: 9px; min-width: 40px; justify-content: center; }
     #Simulacr .sc-tb-btn svg { width: 18px; height: 18px; }
 
-    /* Toolbox e sidepanel diventano drawer scorrevoli sovrapposti, non layout fisso */
     #Simulacr .sc-toolbox {
       position: absolute;
       left: 0; top: 0; bottom: 0;
@@ -655,7 +644,6 @@ body::before{
     }
     #Simulacr .sc-sidepanel.sc-drawer-open { transform: translateX(0); }
 
-    /* Target touch più grandi ovunque nell'interfaccia */
     #Simulacr .sc-tool {
       padding: 10px 4px;
       border: 1px solid var(--sc-border);
@@ -676,9 +664,7 @@ body::before{
     #Simulacr .sc-hint { max-width: 220px; font-size: 10.5px; left: 8px; bottom: 8px; }
     #Simulacr .sc-viewport-controls { right: 8px; bottom: 8px; }
   }
-  /* ---------- Tema chiaro: segue le preferenze del sistema/browser ----------
-     Dichiarata per ultima nel foglio di stile così le sue regole vincono
-     su quelle base (scure) a parità di specificità del selettore. ---------- */
+
   @media (prefers-color-scheme: light) {
     #Simulacr {
       --sc-bg: #eef1f6;
@@ -710,7 +696,6 @@ body::before{
   }
 </style>
 
-  <!-- ============ TOPBAR ============ -->
   <div class="sc-topbar">
     <button class="sc-tb-btn sc-mobile-only sc-drawer-toggle" data-action="toggle-toolbox-drawer" title="Componenti">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -761,13 +746,10 @@ body::before{
     </button>
   </div>
 
-  <!-- Overlay per chiudere i drawer mobile toccando fuori -->
   <div class="sc-drawer-overlay" data-role="drawer-overlay"></div>
 
-  <!-- ============ MAIN ============ -->
   <div class="sc-main">
 
-    <!-- ===== TOOLBOX ===== -->
     <div class="sc-toolbox" data-role="toolbox">
       <div class="sc-tool-group-title">Base</div>
       <div class="sc-tool" draggable="true" data-comp="wireseg" title="Filo dritto">
@@ -856,8 +838,6 @@ body::before{
       </div>
     </div>
 
-
-    <!-- ===== STAGE ===== -->
     <div class="sc-stage-wrap" data-role="stage-wrap">
       <svg class="sc-stage" data-role="stage">
         <defs>
@@ -886,7 +866,6 @@ body::before{
       <div class="sc-toast" data-role="toast"></div>
     </div>
 
-    <!-- ===== SIDE PANEL ===== -->
     <div class="sc-sidepanel">
       <div class="sc-card">
         <div class="sc-card-title">Visualizzazione</div>
@@ -936,17 +915,12 @@ body::before{
 (function(){
   "use strict";
 
-  /* ============================================================
-   *  SIMULACR — Motore di simulazione circuiti elettrici
-   *  Tutto incapsulato in una IIFE, zero variabili globali.
-   * ============================================================ */
-
   var ROOT = document.getElementById("Simulacr");
   if (!ROOT || ROOT.getAttribute("data-sc-inited") === "1") return;
   ROOT.setAttribute("data-sc-inited", "1");
 
   var SVGNS = "http://www.w3.org/2000/svg";
-  var GRID = 20; // passo griglia in unità mondo
+  var GRID = 20;
 
   function $(sel, ctx){ return (ctx||ROOT).querySelector(sel); }
   function $all(sel, ctx){ return Array.prototype.slice.call((ctx||ROOT).querySelectorAll(sel)); }
@@ -1013,7 +987,6 @@ body::before{
   var COMP_DEFS = {};
   function defineComponent(type, def){ COMP_DEFS[type] = def; }
 
-  /* -------------------- CAVO -------------------- */
   defineComponent("wireseg", {
     label: "Cavo", labelPrefix: "W", size: {w:80,h:20},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1022,7 +995,6 @@ body::before{
     isWireLike: true
   });
 
-  /* -------------------- BATTERIA -------------------- */
   defineComponent("battery", {
     label: "Batteria", labelPrefix: "B", size: {w:80,h:40},
     terminals: [ {x:-40,y:0,name:"neg"}, {x:40,y:0,name:"pos"} ],
@@ -1057,7 +1029,6 @@ body::before{
     electrical: { kind: "vsource" }
   });
 
-  /* -------------------- RESISTORE -------------------- */
   defineComponent("resistor", {
     label: "Resistore", labelPrefix: "R", size:{w:80,h:40},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1080,7 +1051,6 @@ body::before{
     electrical: { kind:"resistor" }
   });
 
-  /* -------------------- LAMPADINA -------------------- */
   defineComponent("bulb", {
     label: "Lampadina", labelPrefix: "La", size:{w:80,h:44},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1112,7 +1082,6 @@ body::before{
     electrical: { kind:"bulb" }
   });
 
-  /* -------------------- INTERRUTTORE -------------------- */
   defineComponent("switch", {
     label: "Interruttore", labelPrefix: "S", size:{w:80,h:40},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1131,7 +1100,6 @@ body::before{
     electrical: { kind:"switch" }
   });
 
-  /* -------------------- FUSIBILE -------------------- */
   defineComponent("fuse", {
     label: "Fusibile", labelPrefix: "F", size:{w:80,h:40},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1154,7 +1122,6 @@ body::before{
     electrical: { kind:"fuse" }
   });
 
-  /* -------------------- CONDENSATORE -------------------- */
   defineComponent("capacitor", {
     label: "Condensatore", labelPrefix: "C", size:{w:80,h:40},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1169,7 +1136,6 @@ body::before{
     electrical: { kind:"capacitor" }
   });
 
-  /* -------------------- INDUTTORE -------------------- */
   defineComponent("inductor", {
     label: "Induttore", labelPrefix: "L", size:{w:80,h:40},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1183,7 +1149,6 @@ body::before{
     electrical: { kind:"inductor" }
   });
 
-  /* -------------------- DIODO -------------------- */
   defineComponent("diode", {
     label: "Diodo", labelPrefix: "D", size:{w:80,h:40},
     terminals: [ {x:-40,y:0,name:"anode"}, {x:40,y:0,name:"cathode"} ],
@@ -1198,7 +1163,6 @@ body::before{
     electrical: { kind:"diode" }
   });
 
-  /* -------------------- LED -------------------- */
   defineComponent("led", {
     label: "LED", labelPrefix: "LED", size:{w:80,h:44},
     terminals: [ {x:-40,y:0,name:"anode"}, {x:40,y:0,name:"cathode"} ],
@@ -1216,7 +1180,6 @@ body::before{
     electrical: { kind:"led" }
   });
 
-  /* -------------------- POTENZIOMETRO -------------------- */
   defineComponent("potentiometer", {
     label: "Potenziometro", labelPrefix: "P", size:{w:80,h:44},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1236,7 +1199,6 @@ body::before{
     electrical: { kind:"resistor", dynamicResistance: function(comp){ return Math.max(1, comp.params.resistance * clamp(comp.params.wiper,0.001,1)); } }
   });
 
-  /* -------------------- MOTORE DC -------------------- */
   defineComponent("motor", {
     label: "Motore DC", labelPrefix: "M", size:{w:80,h:44},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1256,7 +1218,6 @@ body::before{
     electrical: { kind:"resistor" }
   });
 
-  /* -------------------- CICALINO -------------------- */
   defineComponent("buzzer", {
     label: "Cicalino", labelPrefix: "Bz", size:{w:80,h:40},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1273,7 +1234,6 @@ body::before{
     electrical: { kind:"resistor" }
   });
 
-  /* -------------------- GENERATORE AC -------------------- */
   defineComponent("acsource", {
     label: "Generatore AC", labelPrefix: "G", size:{w:80,h:44},
     terminals: [ {x:-40,y:0,name:"a"}, {x:40,y:0,name:"b"} ],
@@ -1292,7 +1252,6 @@ body::before{
     electrical: { kind:"vsourceAC" }
   });
 
-  /* -------------------- TRASFORMATORE -------------------- */
   defineComponent("transformer", {
     label: "Trasformatore", labelPrefix: "T", size:{w:100,h:70},
     terminals: [
@@ -1309,15 +1268,12 @@ body::before{
       g.appendChild(svgEl("line", {x1:-50,y1:22,x2:-14,y2:22, stroke:"var(--sc-wire)", "stroke-width":3}));
       g.appendChild(svgEl("line", {x1:50,y1:-22,x2:14,y2:-22, stroke:"var(--sc-wire)", "stroke-width":3}));
       g.appendChild(svgEl("line", {x1:50,y1:22,x2:14,y2:22, stroke:"var(--sc-wire)", "stroke-width":3}));
-      // avvolgimento primario (sinistra) — semicerchi impilati
       var coilsP = [];
       for (var i=0;i<4;i++){ coilsP.push("M-14 "+(-22+i*11.6)+" a6 5.8 0 000 11.6"); }
       g.appendChild(svgEl("path", {d:coilsP.join(" "), fill:"none", stroke:"#c890ff", "stroke-width":2.2}));
-      // avvolgimento secondario (destra)
       var coilsS = [];
       for (var j=0;j<4;j++){ coilsS.push("M14 "+(-22+j*11.6)+" a6 5.8 0 010 11.6"); }
       g.appendChild(svgEl("path", {d:coilsS.join(" "), fill:"none", stroke:"#9fd1ff", "stroke-width":2.2}));
-      // nucleo di ferro (due linee verticali)
       g.appendChild(svgEl("line", {x1:-3,y1:-26,x2:-3,y2:26, stroke:"#8b95a8", "stroke-width":2.4}));
       g.appendChild(svgEl("line", {x1:3,y1:-26,x2:3,y2:26, stroke:"#8b95a8", "stroke-width":2.4}));
       var lbl = svgEl("text", {x:0,y:44, "text-anchor":"middle", class:"sc-comp-label"});
@@ -1327,7 +1283,6 @@ body::before{
     electrical: { kind:"transformer" }
   });
 
-  /* -------------------- AMPLIFICATORE OPERAZIONALE -------------------- */
   defineComponent("opamp", {
     label: "Amplificatore Op.", labelPrefix: "U", size:{w:90,h:70},
     terminals: [
@@ -1352,7 +1307,6 @@ body::before{
     electrical: { kind:"opamp" }
   });
 
-  /* -------------------- MASSA -------------------- */
   defineComponent("ground", {
     label: "Massa", labelPrefix: "GND", size:{w:40,h:40},
     terminals: [ {x:0,y:-20,name:"a"} ],
@@ -1366,7 +1320,6 @@ body::before{
     electrical: { kind:"ground" }
   });
 
-  /* -------------------- VOLTMETRO -------------------- */
   defineComponent("voltmeter", {
     label: "Voltmetro", labelPrefix: "V", size:{w:60,h:44},
     terminals: [ {x:-30,y:0,name:"a"}, {x:30,y:0,name:"b"} ],
@@ -1382,7 +1335,6 @@ body::before{
     electrical: { kind:"voltmeter" }
   });
 
-  /* -------------------- AMPEROMETRO -------------------- */
   defineComponent("ammeter", {
     label: "Amperometro", labelPrefix: "A", size:{w:60,h:44},
     terminals: [ {x:-30,y:0,name:"a"}, {x:30,y:0,name:"b"} ],
@@ -1406,10 +1358,6 @@ body::before{
   }
 
   function markDirty(){ SC.state.dirty = true; }
-
-  /* ============================================================
-   *  TOPOLOGIA — costruzione grafo nodi dai terminali collegati
-   * ============================================================ */
 
   function worldTerminalPos(comp, termName){
     var def = COMP_DEFS[comp.type];
@@ -1477,10 +1425,6 @@ body::before{
     return { uf: uf, nodeFor: nodeFor };
   }
 
-  /* ============================================================
-   *  SOLUTORE CIRCUITALE — Modified Nodal Analysis
-   * ============================================================ */
-
   var PHYS = { VT: 0.026, ISAT: 1e-9, GMIN: 1e-9 };
 
   function solveCircuit(dt){
@@ -1518,7 +1462,7 @@ body::before{
         voltageBranches.push({ id:id, kind: el.kind, extra:1 });
       }
       if (el.kind === "transformer"){
-        voltageBranches.push({ id:id, kind: el.kind, extra:2 }); // due variabili ausiliarie: corrente primaria e secondaria
+        voltageBranches.push({ id:id, kind: el.kind, extra:2 });
       }
     });
 
@@ -1644,8 +1588,6 @@ body::before{
           A[bi][bi] -= Rint;
           Bv[bi] += comp.params.voltage;
         } else if (b.kind === "opamp"){
-          // Sorgente di tensione controllata: Vout = clamp(gain*(V+ - V-), ±Vsupply)
-          // Linearizzata attorno alla soluzione corrente (Newton) per stabilità numerica.
           var nPlus = topo.nodeFor(b.id+"::inplus");
           var nMinus = topo.nodeFor(b.id+"::inminus");
           var nOut = topo.nodeFor(b.id+"::out");
@@ -1656,29 +1598,19 @@ body::before{
           var vsup = comp.params.vsupply;
           var vraw = gain*vin;
           var vout_target = clamp(vraw, -vsup, vsup);
-          // se in saturazione la derivata rispetto a vin è ~0 (uscita bloccata): usiamo gain effettivo ridotto
           var inSat = Math.abs(vraw) > vsup;
           var geff = inSat ? 1e-6 : gain;
-          // Equazione branch: Vout - geff*(V+ - V-) = (vout_target - geff*vin) [termine noto linearizzato]
           if (iOut>=0){ A[iOut][bi]+=1; A[bi][iOut]+=1; }
           if (iPlus>=0){ A[bi][iPlus] -= geff; }
           if (iMinus>=0){ A[bi][iMinus] += geff; }
           Bv[bi] += (vout_target - geff*vin);
-          // ingresso op-amp idealmente non assorbe corrente (impedenza infinita): nessuno stamp su + e -
         } else if (b.kind === "transformer"){
-          // Trasformatore ideale con vincoli algebrici (metodo standard MNA a 2 branch):
-          //   Vs1 - Vs2 = ratio * (Vp1 - Vp2)         [vincolo di tensione]
-          //   Ip = -ratio * Is                         [vincolo di corrente, conservazione potenza]
-          // Più una induttanza di magnetizzazione in parallelo al primario (Norton companion
-          // trapezoidale) per rappresentare l'induttanza finita reale e stabilizzare la DC.
           var nP1t = topo.nodeFor(b.id+"::p1"), nP2t = topo.nodeFor(b.id+"::p2");
           var nS1t = topo.nodeFor(b.id+"::s1"), nS2t = topo.nodeFor(b.id+"::s2");
           var ip1t=idxNode(nP1t), ip2t=idxNode(nP2t), is1t=idxNode(nS1t), is2t=idxNode(nS2t);
-          var biV = bi;       // equazione di vincolo tensione -> variabile ausiliaria = corrente primaria Ip
-          var biI = bi + 1;   // equazione di vincolo corrente -> variabile ausiliaria = corrente secondaria Is
+          var biV = bi;
+          var biI = bi + 1;
           var ratioT = comp.params.ratio;
-
-          // --- Induttanza di magnetizzazione lato primario (Norton companion) ---
           var LmagT = Math.max(comp.params.lp, 1e-6);
           var hT = Math.max(dt, 1e-6);
           var GmagT = hT/(2*LmagT);
@@ -1688,23 +1620,15 @@ body::before{
           stampG(ip1t, ip2t, GmagT);
           stampI(ip1t, ip2t, -IeqMagT);
           comp._pendingGmagT = GmagT; comp._pendingIeqMagT = IeqMagT;
-
-          // --- Branch 1: corrente primaria Ip entra/esce dai nodi primari ---
           if (ip1t>=0){ A[ip1t][biV]+=1; }
           if (ip2t>=0){ A[ip2t][biV]-=1; }
-          // --- Branch 2: corrente secondaria Is entra/esce dai nodi secondari ---
           if (is1t>=0){ A[is1t][biI]+=1; }
           if (is2t>=0){ A[is2t][biI]-=1; }
-
-          // Equazione vincolo tensione (riga biV): Vs1-Vs2 - ratio*(Vp1-Vp2) = 0
           if (is1t>=0) A[biV][is1t]+=1;
           if (is2t>=0) A[biV][is2t]-=1;
           if (ip1t>=0) A[biV][ip1t]-=ratioT;
           if (ip2t>=0) A[biV][ip2t]+=ratioT;
           Bv[biV] += 0;
-
-          // Equazione vincolo corrente (riga biI): Ip + ratio*Is = 0  ->  la corrente ausiliaria
-          // biI rappresenta Is; qui vincoliamo Ip (variabile biV) in funzione di Is (variabile biI)
           A[biI][biV] += 1;
           A[biI][biI] += ratioT;
           Bv[biI] += 0;
@@ -1757,7 +1681,6 @@ body::before{
       var vA = vNode(nA), vB = vNode(nB);
       var vDiff = vA - vB;
       Vcomp[id] = vDiff;
-
       if (el.kind === "vsource" || el.kind === "vsourceAC" || el.kind === "ammeter" || el.kind === "opamp"){
         var bi2 = branchIndexOf[id];
         I[id] = x[bi2];
@@ -1773,9 +1696,8 @@ body::before{
         comp._vSecondary = vS;
         var biV2 = branchIndexOf[id];
         var biI2 = biV2 + 1;
-        I[id] = x[biV2];        // corrente primaria (Ip)
-        comp._isCurrent = x[biI2]; // corrente secondaria (Is)
-        // aggiorna stato induttanza di magnetizzazione
+        I[id] = x[biV2];
+        comp._isCurrent = x[biI2];
         comp._vpPrev = vP;
         comp._imagPrev = (comp._pendingGmagT||0)*vP + (comp._pendingIeqMagT||0);
       } else if (el.kind === "capacitor"){
@@ -1855,10 +1777,6 @@ body::before{
     return x;
   }
 
-  /* ============================================================
-   *  RENDERING & INTERAZIONE
-   * ============================================================ */
-
   var stageSvg = $('[data-role="stage"]');
   var worldG = $('[data-role="world"]');
   var wireLayer = $('[data-role="wire-layer"]');
@@ -1896,8 +1814,6 @@ body::before{
     return { x: (sx - v.x) / v.zoom, y: (sy - v.y) / v.zoom };
   }
 
-  /* ---------------- Creazione / rimozione componenti ---------------- */
-
   function addComponent(type, x, y, opts){
     var def = COMP_DEFS[type];
     if (!def) return null;
@@ -1918,7 +1834,6 @@ body::before{
   function removeComponent(id){
     var comp = SC.state.components[id];
     if (!comp) return;
-    // rimuovi wire collegati a questo componente
     Object.keys(SC.state.wires).forEach(function(wid){
       var w = SC.state.wires[wid];
       if ((w.a.compId===id) || (w.b.compId===id)){ removeWire(wid); }
@@ -1944,8 +1859,6 @@ body::before{
     markDirty();
   }
 
-  /* ---------------- Render componente ---------------- */
-
   function renderComponent(comp){
     var def = COMP_DEFS[comp.type];
     var existing = $('[data-id="'+comp.id+'"]', compLayer);
@@ -1963,7 +1876,6 @@ body::before{
 
     def.draw(g, comp);
 
-    // terminali (pallini) — hit-area invisibile più ampia per il tocco, pallino visivo piccolo
     def.terminals.forEach(function(t){
       var hitArea = svgEl("circle", { cx:t.x, cy:t.y, r:16, fill:"transparent", "data-term":t.name, "data-term-hit":"1" });
       g.appendChild(hitArea);
@@ -1971,19 +1883,11 @@ body::before{
       g.appendChild(dot);
     });
 
-    // etichetta / valore — sempre orizzontali, leggibili, e SEMPRE fuori dall'ingombro
-    // visivo reale del componente, anche quando la rotazione scambia effettivamente
-    // larghezza e altezza sullo schermo (es. un resistore orizzontale ruotato a 90°
-    // diventa verticale: la sua "altezza" visiva reale è la sua larghezza w, non h).
     var rot = comp.rot || 0;
     var radRot = rot * Math.PI/180;
-    // Semi-estensione verticale reale del componente ruotato nel mondo (bounding box):
-    // per un rettangolo w x h ruotato di rot, l'estensione verticale è:
     var halfExtentY = Math.abs(h/2 * Math.cos(radRot)) + Math.abs(w/2 * Math.sin(radRot));
     var labelDist = halfExtentY + 16;
     var valueDist = halfExtentY + 30;
-    // Punto nel sistema locale del componente che, dopo la rotazione del gruppo genitore,
-    // finisce esattamente a (0, labelDist) nel mondo — cioè sempre dritto sotto, mai dentro.
     var labelX = round2(-Math.sin(-radRot) * labelDist);
     var labelY = round2(Math.cos(-radRot) * labelDist);
     var valueX = round2(-Math.sin(-radRot) * valueDist);
@@ -2067,8 +1971,6 @@ body::before{
     Object.keys(SC.state.wires).forEach(function(wid){ renderWire(SC.state.wires[wid]); });
   }
 
-  /* ---------------- Eventi componente: drag, click, rotate, menu ---------------- */
-
   function attachComponentEvents(g, comp){
     var def = COMP_DEFS[comp.type];
     var dragState = null;
@@ -2077,10 +1979,7 @@ body::before{
       if (ev.button !== 0) return;
       var targetTerm = ev.target.getAttribute && ev.target.getAttribute("data-term");
       var isOnTerminalHit = ev.target.getAttribute && ev.target.getAttribute("data-term-hit") === "1";
-      // Su touch, toccare precisamente un terminale avvia sempre un collegamento, anche in
-      // modalità "Seleziona" — evita di dover passare manualmente al tool Filo, il passo
-      // che rendeva il collegamento scomodo. Il tocco sul CORPO del componente continua a
-      // trascinarlo normalmente: la distinzione è netta (l'area del terminale è dedicata).
+
       var touchWireShortcut = ev.pointerType === "touch" && isOnTerminalHit && SC.state.tool !== "delete";
       if (SC.state.tool === "wire" || touchWireShortcut){
         ev.stopPropagation();
@@ -2098,7 +1997,6 @@ body::before{
       var startWorld = screenToWorld(ev.clientX, ev.clientY);
       dragState = { startX: comp.x, startY: comp.y, startWorld: startWorld, moved:false };
 
-      // Long-press (touch): apre il menu contestuale (ruota/duplica/elimina) senza bisogno del tasto destro
       var longPressTimer = null;
       var isTouchPointer = ev.pointerType === "touch";
       if (isTouchPointer){
@@ -2114,11 +2012,6 @@ body::before{
         }, 480);
       }
 
-      // I listener sono agganciati a "window", non all'elemento <g>: un elemento SVG piccolo
-      // può facilmente "perdere" il puntatore durante un movimento rapido (specialmente su
-      // touch), lasciando il drag a metà — con il componente spostato ma i fili aggiornati
-      // solo in parte, o viceversa. Ascoltando su window il movimento viene sempre catturato,
-      // ovunque il dito o il mouse si trovi sullo schermo, esattamente come già fa il pan dello stage.
       function onMove(mv){
         var w = screenToWorld(mv.clientX, mv.clientY);
         var dx = w.x - dragState.startWorld.x;
@@ -2148,7 +2041,7 @@ body::before{
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
         window.removeEventListener("pointercancel", onCancel);
-        refreshWiresForComponent(comp.id); // ripristina posizione visiva coerente coi dati
+        refreshWiresForComponent(comp.id);
         dragState = null;
       }
       window.addEventListener("pointermove", onMove);
@@ -2178,8 +2071,6 @@ body::before{
     });
   }
 
-  // Versione leggera: aggiorna solo le coordinate del path SVG esistente, senza ricreare
-  // l'elemento né i suoi listener. Usata durante il drag continuo per fluidità su mobile.
   function updateWiresForComponentFast(compId){
     Object.keys(SC.state.wires).forEach(function(wid){
       var w = SC.state.wires[wid];
@@ -2193,8 +2084,6 @@ body::before{
       if (path) path.setAttribute("d", d);
     });
   }
-
-  /* ---------------- Disegno filo interattivo con snap ---------------- */
 
   var SNAP_RADIUS = isTouchDevice() ? 34 : 22;
 
@@ -2217,7 +2106,7 @@ body::before{
     fxLayer.appendChild(previewPath);
     var fromPos = endpointPos(fromTerm);
     var isTouch = ev.pointerType === "touch";
-    var touchLift = isTouch ? 34 : 0; // solleva il punto mirato sopra il dito, per vederlo
+    var touchLift = isTouch ? 34 : 0;
 
     function onMove(mv){
       var w = screenToWorld(mv.clientX, mv.clientY - touchLift);
@@ -2238,7 +2127,6 @@ body::before{
         addWire(fromTerm, { compId: near.compId, term: near.term });
         toast("Collegamento creato", "ok");
       } else {
-        // crea giunzione libera nel punto (nodo intermedio) collegato con filo
         var freeId = uid("free");
         addWire(fromTerm, { freeId: freeId, x: snap(w.x), y: snap(w.y) });
       }
@@ -2265,8 +2153,6 @@ body::before{
     if (dot){ dot.classList.add("sc-hover"); highlightedDot = dot; }
   }
   function clearHighlight(){ if (highlightedDot){ highlightedDot.classList.remove("sc-hover"); highlightedDot=null; } }
-
-  /* ---------------- Selezione & Inspector ---------------- */
 
   function selectComponent(id){
     SC.state.selection = id;
@@ -2355,7 +2241,6 @@ body::before{
     });
   }
 
-  /* ---------------- Context menu generico ---------------- */
 
   function showContextMenu(x, y, items){
     var old = $(".sc-ctxmenu"); if (old) old.remove();
@@ -2368,10 +2253,6 @@ body::before{
       var b = document.createElement("button");
       b.textContent = it.label;
       if (it.danger) b.className = "sc-danger-item";
-      // pointerup invece di click: su touch il "click" è un evento sintetico generato dal
-      // browser con tempistiche variabili (spesso 0-300ms dopo il touchend reale), che può
-      // arrivare mescolato con altri eventi della sequenza long-press che ha aperto questo
-      // stesso menu. pointerup è l'evento reale e immediato, niente ambiguità di timing.
       b.addEventListener("pointerup", function(ev){
         ev.stopPropagation();
         ev.preventDefault();
@@ -2380,9 +2261,7 @@ body::before{
       });
       menu.appendChild(b);
     });
-    // Blocca qualunque evento pointer sul corpo del menu dal propagarsi allo stage
-    // sottostante: senza questo, un tocco impreciso vicino al bordo di un bottone
-    // potrebbe "passare attraverso" e avviare un pan/drag sullo stage nello stesso gesto.
+
     menu.addEventListener("pointerdown", function(ev){ ev.stopPropagation(); });
     menu.addEventListener("pointerup", function(ev){ ev.stopPropagation(); });
     ROOT.appendChild(menu);
@@ -2391,9 +2270,7 @@ body::before{
       menu.remove();
       window.removeEventListener("pointerdown", onOutsidePointerDown, true);
     }
-    // Chiusura al tocco/click FUORI dal menu: ascoltiamo pointerdown in fase di cattura,
-    // e ignoriamo esplicitamente il primo evento (quello, se presente, generato dallo
-    // stesso gesto che ha aperto il menu) rimandando l'attivazione al prossimo frame.
+
     function onOutsidePointerDown(ev){
       if (!menu.contains(ev.target)){ closeMenu(); }
     }
@@ -2401,8 +2278,6 @@ body::before{
       window.addEventListener("pointerdown", onOutsidePointerDown, true);
     });
   }
-
-  /* ---------------- Drag & drop dalla toolbox ---------------- */
 
   $all(".sc-tool", toolboxEl).forEach(function(toolEl){
     toolEl.addEventListener("dragstart", function(ev){
@@ -2422,10 +2297,6 @@ body::before{
     toast(COMP_DEFS[type].label + " aggiunto");
   });
 
-  // Supporto touch: drag continuo in un solo gesto, dallo strumento allo stage.
-  // Tocchi uno strumento e, senza sollevare il dito, trascini fino al punto desiderato
-  // sullo stage; un'anteprima semitrasparente segue il dito durante il trascinamento.
-  // Se sollevi il dito fuori dallo stage (es. ancora sulla toolbox), il piazzamento si annulla.
   var touchDragPreview = null;
   var touchDragType = null;
   var touchDragStarted = false;
@@ -2478,8 +2349,6 @@ body::before{
           toast(COMP_DEFS[touchDragType].label + " aggiunto");
         }
       } else if (touchDragType && !touchDragStarted){
-        // Tocco singolo senza trascinamento: piazza al centro dello stage visibile, comodo
-        // per chi preferisce due tocchi rapidi invece del drag.
         var rect = stageWrap.getBoundingClientRect();
         var w2 = screenToWorld(rect.left + rect.width/2, rect.top + rect.height/2);
         closeDrawers();
@@ -2504,17 +2373,15 @@ body::before{
     return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
   }
 
-  /* ---------------- Pan & Zoom sullo stage ---------------- */
-
   stageWrap.addEventListener("pointerdown", function(ev){
     if (ev.target !== stageSvg && ev.target !== stageWrap) return;
-    if (ev.pointerType === "touch" && pinchState) return; // pinch in corso, ignora il pan singolo
+    if (ev.pointerType === "touch" && pinchState) return;
     selectComponent(null);
     var v = SC.state.view;
     var start = { x: ev.clientX, y: ev.clientY, vx: v.x, vy: v.y };
     stageSvg.classList.add("sc-panning");
     function onMove(mv){
-      if (pinchState) { onUp(); return; } // un secondo dito è arrivato: passa al pinch
+      if (pinchState) { onUp(); return; }
       v.x = start.vx + (mv.clientX - start.x);
       v.y = start.vy + (mv.clientY - start.y);
       applyViewTransform();
@@ -2543,7 +2410,6 @@ body::before{
     applyViewTransform();
   }, { passive:false });
 
-  /* ---------------- Pinch-to-zoom (due dita) per touch ---------------- */
   var pinchState = null;
   function touchDist(t0, t1){ return dist(t0.clientX, t0.clientY, t1.clientX, t1.clientY); }
   function touchMid(t0, t1){ return { x:(t0.clientX+t1.clientX)/2, y:(t0.clientY+t1.clientY)/2 }; }
@@ -2571,7 +2437,6 @@ body::before{
       var newDist = touchDist(ev.touches[0], ev.touches[1]);
       var scale = newDist / Math.max(pinchState.startDist, 1);
       var newZoom = clamp(pinchState.startZoom * scale, 0.35, 3);
-      // mantiene il punto medio del pinch fermo sullo schermo durante lo zoom
       var wx = (pinchState.midX - pinchState.startVx) / pinchState.startZoom;
       var wy = (pinchState.midY - pinchState.startVy) / pinchState.startZoom;
       v.zoom = newZoom;
@@ -2598,8 +2463,6 @@ body::before{
     v.x = mx-wx*v.zoom; v.y = my-wy*v.zoom;
     applyViewTransform();
   }
-
-  /* ---------------- Toolbar principale ---------------- */
 
   function setTool(tool){
     SC.state.tool = tool;
@@ -2692,7 +2555,6 @@ body::before{
     else { document.exitFullscreen && document.exitFullscreen(); }
   });
 
-  /* ---------------- Drawer mobile (toolbox / pannello strumenti) ---------------- */
   var drawerOverlay = $('[data-role="drawer-overlay"]');
 
   function closeDrawers(){
@@ -2717,14 +2579,12 @@ body::before{
   drawerOverlay.addEventListener("click", closeDrawers);
   drawerOverlay.addEventListener("touchstart", closeDrawers, {passive:true});
 
-  // Chiudi automaticamente il drawer toolbox dopo aver piazzato un componente su mobile (tocco diretto)
-  var _origPendingPlacementSetter = null; // segnaposto, gestito sotto nel blocco touch placement
+  var _origPendingPlacementSetter = null;
 
   $('[data-action="toggle-collapse"]').addEventListener("click", function(ev){
     ev.currentTarget.closest(".sc-card").classList.toggle("sc-collapsed");
   });
 
-  /* ---------------- Checkbox / radio pannello destro ---------------- */
 
   function bindToggle(bindName, cb){
     var el = ROOT.querySelector('[data-bind="'+bindName+'"]');
@@ -2745,15 +2605,9 @@ body::before{
     if (sel) selectComponent(sel);
   }
   SC.state.scopeRunning = true;
-
   $('[data-action="scope-clear"]').addEventListener("click", function(){ SC.state.scopeData = []; });
 
-  /* ---------------- Tastiera ---------------- */
-  /* ============================================================
-   *  LOOP DI SIMULAZIONE — chiama il solver, aggiorna la grafica
-   * ============================================================ */
-
-  var electronParticles = {}; // wireId/compId -> [{t, ...}]
+  var electronParticles = {};
   var lastFrameTime = performance.now();
 
   function stepSimulation(){
@@ -2761,7 +2615,6 @@ body::before{
     var rawDt = (now - lastFrameTime) / 1000;
     lastFrameTime = now;
     var dt = clamp(rawDt, 0.001, 0.05) * SC.state.speed;
-
     if (SC.state.running && Object.keys(SC.state.components).length){
       SC.state.time += dt;
       var result = solveCircuit(Math.max(dt, 1/240));
@@ -2776,7 +2629,6 @@ body::before{
   function applySolvedToVisuals(result, dt){
     var comps = SC.state.components;
     if (!result || !result.ok){
-      // nessun errore bloccante: continua a disegnare tutto spento
     }
     var I = (result && result.I) || {};
     var Vc = (result && result.Vcomp) || {};
@@ -2849,7 +2701,6 @@ body::before{
     else clearParticles();
   }
 
-  /* -------------------- Animazione corrente (elettroni / convenzionale) -------------------- */
 
   function clearParticles(){
     $all(".sc-electron, .sc-conv-arrow", fxLayer).forEach(function(n){ n.remove(); });
@@ -2857,7 +2708,6 @@ body::before{
   }
 
   function animateCurrentParticles(I, dt){
-    // per ogni wire con corrente apprezzabile disegniamo particelle in movimento lungo il segmento
     $all(".sc-electron, .sc-conv-arrow", fxLayer).forEach(function(n){ n.remove(); });
 
     var segments = [];
@@ -2881,7 +2731,7 @@ body::before{
       var len = dist(seg.pa.x,seg.pa.y,seg.pb.x,seg.pb.y);
       if (len < 1) return;
       var dirSign = seg.current >= 0 ? 1 : -1;
-      var speed = clamp(mag * 40, 8, 260) * dirSign; // px/s lungo il filo, proporzionale a I
+      var speed = clamp(mag * 40, 8, 260) * dirSign;
       var key = "seg"+idx;
       if (!electronParticles[key]) electronParticles[key] = { offset: Math.random()*40 };
       var state = electronParticles[key];
@@ -2910,8 +2760,6 @@ body::before{
   }
 
   function estimateWireCurrent(w){
-    // per un filo che collega due terminali di componenti reali, la corrente è quella del componente collegato
-    // se collega due giunzioni libere (nodo passante), sommiamo le correnti entranti nel nodo per stimare il flusso
     var I = (SC.state.solved && SC.state.solved.I) || {};
     if (w.a.compId){
       var val = I[w.a.compId];
@@ -2924,7 +2772,6 @@ body::before{
     return 0;
   }
 
-  /* -------------------- Pannello analisi -------------------- */
 
   function updateAnalysisPanel(result){
     if (!result || !result.ok){
@@ -2934,7 +2781,6 @@ body::before{
     var comps = SC.state.components;
     var ids = Object.keys(comps);
     if (!ids.length){ analysisEl.textContent = "Nessun circuito attivo."; return; }
-
     var totalPower = 0;
     var lines = [];
     ids.forEach(function(id){
@@ -2950,7 +2796,6 @@ body::before{
     });
 
     var srcCount = ids.filter(function(id){ var k=COMP_DEFS[comps[id].type].electrical; return k && (k.kind==="vsource"||k.kind==="vsourceAC"); }).length;
-
     lines.push("Componenti: " + ids.length);
     lines.push("Sorgenti attive: " + srcCount);
     lines.push("Potenza dissipata stimata: " + fmtUnit(totalPower, "W"));
@@ -2958,12 +2803,10 @@ body::before{
     analysisEl.innerHTML = lines.map(function(l){ return '<div>'+l+'</div>'; }).join("");
   }
 
-  /* -------------------- Oscilloscopio -------------------- */
 
   var SCOPE_COLORS = ["#4fd1c5", "#ffb454", "#ff6b6b", "#7fffb0", "#c890ff"];
-  var scopeHistory = []; // {t, values:[...]}
-  var SCOPE_WINDOW = 6; // secondi visibili
-
+  var scopeHistory = [];
+  var SCOPE_WINDOW = 6;
   function collectScopeChannels(){
     var channels = [];
     Object.keys(SC.state.components).forEach(function(id){
@@ -3008,7 +2851,6 @@ body::before{
     }
     scopeCtx.strokeStyle = "#26314788";
     scopeCtx.beginPath(); scopeCtx.moveTo(0,H/2); scopeCtx.lineTo(W,H/2); scopeCtx.stroke();
-
     scopeLegend.innerHTML = "";
     if (!channels.length || scopeHistory.length < 2){
       scopeCtx.fillStyle = "#5c6b83";
@@ -3017,11 +2859,9 @@ body::before{
       return;
     }
 
-    // scala automatica in base al massimo assoluto osservato
     var maxAbs = 1e-6;
     scopeHistory.forEach(function(pt){ pt.values.forEach(function(v){ maxAbs = Math.max(maxAbs, Math.abs(v)); }); });
     maxAbs *= 1.15;
-
     var tNow = SC.state.time;
     channels.forEach(function(ch, ci){
       var color = SCOPE_COLORS[ci % SCOPE_COLORS.length];
@@ -3045,7 +2885,6 @@ body::before{
     });
   }
 
-  /* ---------------- Tastiera ---------------- */
   window.addEventListener("keydown", function(ev){
     var tag = (document.activeElement && document.activeElement.tagName) || "";
     if (tag === "INPUT" || tag === "TEXTAREA") return;
@@ -3058,12 +2897,8 @@ body::before{
     if (ev.key === " "){ $('[data-action="run-toggle"]').click(); ev.preventDefault(); }
   });
 
-  /* ============================================================
-   *  AVVIO
-   * ============================================================ */
 
   function bootstrapDemoCircuit(){
-    // Circuito dimostrativo iniziale: batteria + interruttore + resistore + lampadina in serie
     var bx=120, by=140;
     var bat = addComponent("battery", bx, by, {params:{voltage:9, rint:0.5}});
     var sw  = addComponent("switch", bx+140, by, {});
@@ -3077,7 +2912,6 @@ body::before{
     addWire({compId:bulb.id, term:"a"}, {compId:bat.id, term:"neg"});
     selectComponent(null);
   }
-
   bootstrapDemoCircuit();
   requestAnimationFrame(stepSimulation);
 
